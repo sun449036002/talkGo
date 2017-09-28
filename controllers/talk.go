@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"strconv"
+	"time"
 )
 
 //图灵
@@ -92,7 +93,9 @@ func (c *TalkController) GetOne() {
 	if resp.Header.Get("Content-Type") == "audio/mp3" {
 		//保存文件
 		res.ToFile("./static/1.mp3");
-		jsonMap["mp3"] = beego.AppConfig.String("rooturl") + "mp3dir/1.mp3";
+		mp3_id := strconv.Itoa(time.Now().UnixNano());
+		jsonMap["mp3"] = beego.AppConfig.String("rooturl") + "mp3dir/" + mp3_id + ".mp3";
+		jsonMap["mp3_id"] = mp3_id;
 
 	} else {
 		audioJson, err := res.String();
