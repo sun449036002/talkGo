@@ -82,7 +82,7 @@ func (c *TalkController) GetOne() {
 
 	//合成语音
 	token := c.getToken();
-	audioUrl := beego.AppConfig.String("BdText2AudioApi") + "?tex=" + tl.Text + "&lan=zh&ctp=1&cuid=123321&per=3&tok=" + token;
+	audioUrl := beego.AppConfig.String("BdText2AudioApi") + "?tex=" + tl.Text + "&lan=zh&ctp=1&cuid=123321&per=4&tok=" + token;
 	res := httplib.Get(audioUrl);
 
 	resp,err := res.Response();
