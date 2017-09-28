@@ -92,7 +92,7 @@ func (c *TalkController) GetOne() {
 	if resp.Header.Get("Content-Type") == "audio/mp3" {
 		//保存文件
 		res.ToFile("./static/1.mp3");
-		jsonMap["mp3"] = "http://localhost:8080/mp3dir/1.mp3";
+		jsonMap["mp3"] = beego.AppConfig.String("rooturl") + "mp3dir/1.mp3";
 
 	} else {
 		audioJson, err := res.String();
