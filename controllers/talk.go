@@ -7,6 +7,8 @@ import (
 	"fmt"
 	"strconv"
 	"math/rand"
+	"os"
+	"time"
 )
 
 //图灵
@@ -22,7 +24,7 @@ type BdToken struct {
 	Session_key string
 	Scope string
 	Session_secret string
-	Expires_in int
+	Expires_in int64
 }
 
 // TalkController operations for Talk
@@ -93,8 +95,7 @@ func (c *TalkController) GetOne() {
 	if resp.Header.Get("Content-Type") == "audio/mp3" {
 		//保存文件
 		mp3_id := strconv.Itoa(rand.Int());
-		err = res.ToFile("./static/" + mp3_id + ".mp3");
-		fmt.Println(err);
+		res.ToFile("./static/" + mp3_id + ".mp3");
 		jsonMap["mp3"] = beego.AppConfig.String("rooturl") + "mp3dir/" + mp3_id + ".mp3";
 		jsonMap["mp3_id"] = mp3_id;
 
@@ -158,18 +159,62 @@ func (c * TalkController) error(err error) map[string]string {
 }
 
 func (c *TalkController) getToken() string {
+	var bdTken BdToken;
+	now := time.Now().Unix();
+
+	fout, err := os.Open("./token.json");
+	if err != nil {
+		if os.IsNotExist(err) {
+			fout,err = os.Create("./token.json");
+			if err != nil {
+				fmt.Println("file create fail");
+			}
+		}
+	} else {
+		tokenBytes := make([]byte, 1024);
+		len, err := fout.Read(tokenBytes);
+		if err != nil {
+			fmt.Println(err.Error());
+			return "";
+		}
+
+		//fmt.Println("len > 0", len, len > 0);
+		if len > 0 {
+			//fmt.Println("%x", tokenBytes);
+			//fmt.Println("%x", tokenBytes[:len]);
+			err = json.Unmarshal(tokenBytes[:len], &bdTken);
+			if err != nil {
+				fmt.Println(err.Error());
+				return "";
+			}
+			if bdTken.Expires_in > now {
+				fmt.Println("from file");
+				return bdTken.Access_token;
+			}
+		}
+	}
+
+	//访问接口最新TOKEN
 	apikey := beego.AppConfig.String("BdApiKey");
 	secretkey := beego.AppConfig.String("BdSecretKey");
 	res := httplib.Get("https://openapi.baidu.com/oauth/2.0/token?grant_type=client_credentials&client_id=" + apikey + "&client_secret=" + secretkey)
 
 	jsonStr, err := res.String();
-	var bdTken BdToken;
+
 
 	err = json.Unmarshal([]byte(jsonStr),&bdTken)
 	if err != nil {
 		fmt.Println(err);
 	}
-	//fmt.Println(bdTken.Access_token);
+	bdTken.Expires_in += now;
+
+	_jsonByte, err := json.Marshal(bdTken);
+	if err != nil {
+		fmt.Println(err.Error());
+		return "";
+	}
+
+	fout.Write(_jsonByte);
 
 	return bdTken.Access_token;
 }
