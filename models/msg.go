@@ -20,5 +20,6 @@ func init() {
 	// 注册驱动
 	orm.RegisterDataBase("default", "mysql", "root:mm@tcp(127.0.0.1:3306)/sun?charset=utf8");
 
-	orm.RunSyncdb("default", false, true);
+	dropOldTable := true;
+	orm.RunSyncdb("default", dropOldTable, true);
 }
