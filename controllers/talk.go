@@ -11,6 +11,7 @@ import (
 	"os"
 	"time"
 	. "talkGo/models"
+	//"reflect"
 )
 
 //图灵
@@ -135,7 +136,15 @@ func (c *TalkController) GetOne() {
 // @Failure 403
 // @router / [get]
 func (c *TalkController) GetAll() {
-	c.Data["json"] = map[string]string {"a" : "abc"}
+	o := orm.NewOrm();
+	var lists []orm.ParamsList;
+	count, err := o.QueryTable("msg").ValuesList(&lists);
+	if err != nil {
+		fmt.Println(err.Error());
+	}
+	fmt.Println(lists, count);
+
+	c.Data["json"] = map[string] []orm.ParamsList {"items" : lists};
 	c.ServeJSON();
 }
 
