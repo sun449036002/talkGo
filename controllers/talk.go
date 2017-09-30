@@ -13,10 +13,6 @@ import (
 	. "talkGo/models"
 )
 
-func init() {
-
-}
-
 //图灵
 type Tl struct {
 	Code int
@@ -68,9 +64,6 @@ func (c *TalkController) Post() {
 func (c *TalkController) GetOne() {
 	msg := c.GetString("msg");
 
-	//记录用户的提交的内容
-	go c.saveMsg(msg);
-
 	//接口访问
 	txUrl := beego.AppConfig.String("TLApi") + "?userid=1&key=" + beego.AppConfig.String("TLKey") + "&info=" + msg;
 	req := httplib.Get(txUrl)
@@ -109,11 +102,16 @@ func (c *TalkController) GetOne() {
 		jsonMap["mp3"] = beego.AppConfig.String("rooturl") + "mp3dir/" + mp3_id + ".mp3";
 		jsonMap["mp3_id"] = mp3_id;
 
+		//记录用户的提交的内容
+		go c.saveMsg(msg, tl.Text, jsonMap["mp3"]);
+
 	} else {
 		audioJson, err := res.String();
 		if err != nil {
 			fmt.Println(err);
 		}
+		//记录用户的提交的内容
+		go c.saveMsg(msg, tl.Text, "");
 
 		fmt.Println(audioJson);
 	}
@@ -229,9 +227,9 @@ func (c *TalkController) getToken() string {
 	return bdTken.Access_token;
 }
 
-func (c *TalkController) saveMsg(msg string) {
+func (c *TalkController) saveMsg(msg string, replyContent string, mp3url string) {
 	o := orm.NewOrm();
-	dbMsg := Msg{Txt : msg, CreateTime : time.Now().Unix()}
+	dbMsg := Msg{Txt : msg, ReplyContent : replyContent, Mp3Url : mp3url, CreateTime : time.Now().Unix()}
 	insertId, err := o.Insert(&dbMsg);
 	if err != nil {
 		fmt.Println(err.Error());
