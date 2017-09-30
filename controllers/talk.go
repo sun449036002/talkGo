@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/orm"
 	"github.com/astaxie/beego/httplib"
 	"encoding/json"
 	"fmt"
@@ -9,7 +10,12 @@ import (
 	"math/rand"
 	"os"
 	"time"
+	. "talkGo/models"
 )
+
+func init() {
+
+}
 
 //图灵
 type Tl struct {
@@ -62,6 +68,10 @@ func (c *TalkController) Post() {
 func (c *TalkController) GetOne() {
 	msg := c.GetString("msg");
 
+	//记录用户的提交的内容
+	go c.saveMsg(msg);
+
+	//接口访问
 	txUrl := beego.AppConfig.String("TLApi") + "?userid=1&key=" + beego.AppConfig.String("TLKey") + "&info=" + msg;
 	req := httplib.Get(txUrl)
 	resJson, err := req.String();
@@ -217,4 +227,14 @@ func (c *TalkController) getToken() string {
 	fout.Write(_jsonByte);
 
 	return bdTken.Access_token;
+}
+
+func (c *TalkController) saveMsg(msg string) {
+	o := orm.NewOrm();
+	dbMsg := Msg{Txt : msg, CreateTime : time.Now().Unix()}
+	insertId, err := o.Insert(&dbMsg);
+	if err != nil {
+		fmt.Println(err.Error());
+	}
+	fmt.Println("insert id === >", insertId);
 }
