@@ -5,7 +5,6 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-
 type Msg struct {
 	Id int
 	Txt string `orm:"index"`
