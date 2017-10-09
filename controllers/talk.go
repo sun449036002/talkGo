@@ -42,6 +42,34 @@ func (c *TalkController) URLMapping() {
 	c.Mapping("GetAll", c.GetAll)
 	c.Mapping("Put", c.Put)
 	c.Mapping("Delete", c.Delete)*/
+	c.Mapping("Say", c.Say)
+	c.Mapping("Login", c.Login)
+}
+
+// Login ...
+// @Title Login
+// @Description get Talk by id
+// @Param	id		path 	string	true		"The key for staticblock"
+// @Success 200 {object} models.Talk
+// @Failure 403 :id is empty
+// @router /login [get]
+func (c *TalkController) Login()  {
+	code := c.GetString("code");
+
+	url := beego.AppConfig.String("wxApiUrl") + "sns/jscode2session?appid=" + beego.AppConfig.String("wxSmallAppId") + "&secret=" + beego.AppConfig.String("wxSmallSecret") + "&js_code=" + code + "&grant_type=authorization_code";
+	req := httplib.Get(url);
+	res, err := req.Response();
+	fmt.Println(res.Header);
+
+	if err != nil {
+		c.Data["json"] = error(err);
+		c.ServeJSON();
+	}
+
+	fmt.Println(req.String());
+
+	c.Data["json"] = map[string]string{"code" : code}
+	c.ServeJSON();
 }
 
 // Post ...
@@ -62,7 +90,7 @@ func (c *TalkController) Post() {
 // @Success 200 {object} models.Talk
 // @Failure 403 :id is empty
 // @router /:id [get]
-func (c *TalkController) GetOne() {
+func (c *TalkController) Say() {
 	msg := c.GetString("msg");
 
 	//接口访问
