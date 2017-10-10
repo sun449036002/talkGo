@@ -57,10 +57,9 @@ func (c *TalkController) Login()  {
 	code := c.GetString("code");
 
 	url := beego.AppConfig.String("wxApiUrl") + "sns/jscode2session?appid=" + beego.AppConfig.String("wxSmallAppId") + "&secret=" + beego.AppConfig.String("wxSmallSecret") + "&js_code=" + code + "&grant_type=authorization_code";
+	fmt.Println(url);
 	req := httplib.Get(url);
-	res, err := req.Response();
-	fmt.Println(res.Header);
-
+	_, err := req.Response();
 	if err != nil {
 		c.Data["json"] = error(err);
 		c.ServeJSON();
