@@ -82,6 +82,7 @@ func (c *TalkController) Login()  {
 	fmt.Println(wxSession);
 	redis,err := cache.NewCache("redis", `{"key":"127.0.0.1","conn":":6379","dbNum":"0","password":""}`)
 	if err != nil {
+		fmt.Println(err);
 		c.Data["json"] = error(err);
 		c.ServeJSON();
 	}
