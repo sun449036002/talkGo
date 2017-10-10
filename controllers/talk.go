@@ -53,6 +53,7 @@ func (c *TalkController) URLMapping() {
 	c.Mapping("Delete", c.Delete)*/
 	c.Mapping("Say", c.Say)
 	c.Mapping("Login", c.Login)
+	c.Mapping("CheckLogin", c.CheckLogin)
 }
 
 // Login ...
@@ -92,6 +93,28 @@ func (c *TalkController) Login()  {
 	redis.Put(sessionCacheKey, map[string]string{"openid" : wxSession.Openid, "session_key" : wxSession.Session_key}, 300 * time.Second)
 
 	c.Data["json"] = map[string]string{"session_key" : sessionCacheKey}
+	c.ServeJSON();
+}
+
+// CheckLogin ...
+// @Title CheckLogin
+// @Description get Talk by id
+// @Param	id		path 	string	true		"The key for staticblock"
+// @Success 200 {object} models.Talk
+// @Failure 403 :id is empty
+// @router /check_login [get]
+func (c *TalkController) CheckLogin()  {
+	session_key := c.GetString("session_key");
+	redis,err := cache.NewCache("redis", `{"key":"talkRedis","conn":"127.0.0.1:6379","dbNum":"0","password":""}`)
+	if err != nil {
+		fmt.Println(err);
+		c.Data["json"] = error(err);
+		c.ServeJSON();
+	}
+
+	fmt.Println(redis.Get(session_key));
+
+	c.Data["json"] = map[string]string{"session_key" : session_key}
 	c.ServeJSON();
 }
 
