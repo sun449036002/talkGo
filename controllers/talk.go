@@ -88,7 +88,7 @@ func (c *TalkController) Login()  {
 		c.ServeJSON();
 	}
 
-	redis.Put("sessionKey", "wxSession", 300 * time.Second)
+	redis.Put("sessionKey", wxSession, 300 * time.Second)
 
 	c.Data["json"] = map[string]string{"code" : code}
 	c.ServeJSON();
