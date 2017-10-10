@@ -13,6 +13,7 @@ import (
 	"os"
 	"time"
 	. "talkGo/models"
+	"talkGo/lib"
 )
 
 
@@ -80,7 +81,6 @@ func (c *TalkController) Login()  {
 		c.ServeJSON();
 	}
 
-	fmt.Println(wxSession);
 	redis,err := cache.NewCache("redis", `{"key":"talkRedis","conn":"127.0.0.1:6379","dbNum":"0","password":""}`)
 	if err != nil {
 		fmt.Println(err);
@@ -88,12 +88,10 @@ func (c *TalkController) Login()  {
 		c.ServeJSON();
 	}
 
-	fmt.Println(wxSession.Openid)
-	fmt.Println(wxSession.Session_key)
-	fmt.Println(wxSession.Unionid)
-	redis.Put("sessionKey", wxSession, 300 * time.Second)
+	sessionCacheKey := lib.GetRandomString(16);
+	redis.Put(sessionCacheKey, map[string]string{"openid" : wxSession.Openid, "session_key" : wxSession.Session_key}, 300 * time.Second)
 
-	c.Data["json"] = map[string]string{"code" : code}
+	c.Data["json"] = map[string]string{"session_key" : sessionCacheKey}
 	c.ServeJSON();
 }
 
