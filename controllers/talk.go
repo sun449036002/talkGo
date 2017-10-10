@@ -13,8 +13,8 @@ import (
 	"os"
 	"time"
 	. "talkGo/models"
-	//"reflect"
 )
+
 
 //图灵
 type Tl struct {
