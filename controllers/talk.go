@@ -3,6 +3,7 @@ package controllers
 import (
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
+	"github.com/astaxie/beego/cache"
 	"github.com/astaxie/beego/httplib"
 	"encoding/json"
 	"fmt"
@@ -28,6 +29,12 @@ type BdToken struct {
 	Scope string
 	Session_secret string
 	Expires_in int64
+}
+
+type WxSession struct {
+	Openid string
+	Session_key string
+	Unionid string
 }
 
 // TalkController operations for Talk
@@ -59,13 +66,27 @@ func (c *TalkController) Login()  {
 	url := beego.AppConfig.String("wxApiUrl") + "sns/jscode2session?appid=" + beego.AppConfig.String("wxSmallAppId") + "&secret=" + beego.AppConfig.String("wxSmallSecret") + "&js_code=" + code + "&grant_type=authorization_code";
 	fmt.Println(url);
 	req := httplib.Get(url);
-	_, err := req.Response();
+	sessionJson,err:= req.String();
 	if err != nil {
 		c.Data["json"] = error(err);
 		c.ServeJSON();
 	}
 
-	fmt.Println(req.String());
+	var wxSession WxSession;
+	err = json.Unmarshal([]byte(sessionJson), &wxSession);
+	if err != nil {
+		c.Data["json"] = error(err);
+		c.ServeJSON();
+	}
+
+	fmt.Println(wxSession);
+	redis,err := cache.NewCache("redis", `{"key":"127.0.0.1","conn":":6039","dbNum":"0","password":""}`)
+	if err != nil {
+		c.Data["json"] = error(err);
+		c.ServeJSON();
+	}
+
+	redis.Put("sessionKey", wxSession, 300 * time.Second)
 
 	c.Data["json"] = map[string]string{"code" : code}
 	c.ServeJSON();
