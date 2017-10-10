@@ -80,13 +80,13 @@ func (c *TalkController) Login()  {
 	}
 
 	fmt.Println(wxSession);
-	redis,err := cache.NewCache("redis", `{"key":"127.0.0.1","conn":":6039","dbNum":"0","password":""}`)
+	redis,err := cache.NewCache("redis", `{"key":"127.0.0.1","conn":":6379","dbNum":"0","password":""}`)
 	if err != nil {
 		c.Data["json"] = error(err);
 		c.ServeJSON();
 	}
 
-	redis.Put("sessionKey", wxSession, 300 * time.Second)
+	redis.Put("sessionKey", "wxSession", 300 * time.Second)
 
 	c.Data["json"] = map[string]string{"code" : code}
 	c.ServeJSON();
