@@ -76,7 +76,7 @@ func (c *TalkController) UpVoice() {
 		fmt.Println(ferr);
 	}
 
-	var b = [1024 * 1024]byte;
+	var b = make([]byte, 1024 * 1024);
 	len, frerr := f.Read(b);
 	if frerr != nil {
 		fmt.Println(frerr);
