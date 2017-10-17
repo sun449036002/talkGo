@@ -76,7 +76,13 @@ func (c *TalkController) UpVoice() {
 		fmt.Println(ferr);
 	}
 
-	c.Data["json"] = map[string]string{"token" : c.getToken(), "voice" : beego.AppConfig.String("rooturl") + "static/" + h.Filename + ".pcm"}
+	var b = [1024 * 1024]byte;
+	len, frerr := f.Read(b);
+	if frerr != nil {
+		fmt.Println(frerr);
+	}
+
+	c.Data["json"] = map[string]string{"token" : c.getToken(), "voice" : b[:len]}
 	c.ServeJSON();
 }
 
