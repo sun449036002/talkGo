@@ -15,6 +15,7 @@ import (
 	. "talkGo/models"
 	"talkGo/lib"
 	"log"
+	"flag"
 )
 
 
@@ -71,7 +72,10 @@ func (c *TalkController) UpVoice() {
 		log.Fatal("getfile err ", err)
 	}
 	defer f.Close()
-	c.SaveToFile("uploadname", "static/" + h.Filename) // 保存位置在 static/upload, 没有文件夹要先创建
+	ferr := c.SaveToFile("file", "static/" + h.Filename) // 保存位置在 static/upload, 没有文件夹要先创建
+	if ferr != nil {
+		fmt.Println(ferr);
+	}
 
 	fmt.Println(beego.AppConfig.String("rooturl") + "static/" + h.Filename);
 }
