@@ -63,7 +63,7 @@ func (c *TalkController) URLMapping() {
 // @Param	id		path 	string	true		"The key for staticblock"
 // @Success 200 {object} models.Talk
 // @Failure 403 :id is empty
-// @router /upVoice [get]
+// @router /upVoice [post]
 func (c *TalkController) UpVoice() {
 	fmt.Println(123);
 }
