@@ -85,7 +85,10 @@ func (c *TalkController) UpVoice() {
 		fmt.Println(len);
 	}
 
-	c.Data["json"] = map[string]string{"token" : c.getToken()}
+	token := c.getToken();
+	jsonMap := make(map[string]string);
+	jsonMap["token"] = token;
+	c.Data["json"] = jsonMap;
 	c.ServeJSON();
 }
 
