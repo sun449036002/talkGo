@@ -76,7 +76,8 @@ func (c *TalkController) UpVoice() {
 		fmt.Println(ferr);
 	}
 
-	fmt.Println(beego.AppConfig.String("rooturl") + "static/" + h.Filename);
+	c.Data["json"] = map[string]string{"token" : c.getToken(), "voice" : beego.AppConfig.String("rooturl") + "static/" + h.Filename + ".pcm"}
+	c.ServeJSON();
 }
 
 // Login ...
