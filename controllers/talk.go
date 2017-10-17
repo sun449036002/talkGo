@@ -14,6 +14,7 @@ import (
 	"time"
 	. "talkGo/models"
 	"talkGo/lib"
+	"log"
 )
 
 
@@ -65,7 +66,14 @@ func (c *TalkController) URLMapping() {
 // @Failure 403 :id is empty
 // @router /upVoice [post]
 func (c *TalkController) UpVoice() {
-	fmt.Println(c.GetString("file"));
+	f,h,err := c.GetFile("file");
+	if err != nil {
+		log.Fatal("getfile err ", err)
+	}
+	defer f.Close()
+	c.SaveToFile("uploadname", "static/" + h.Filename) // 保存位置在 static/upload, 没有文件夹要先创建
+
+	fmt.Println(beego.AppConfig.String("rooturl") + "static/" + h.Filename);
 }
 
 // Login ...
