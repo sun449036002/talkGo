@@ -54,6 +54,18 @@ func (c *TalkController) URLMapping() {
 	c.Mapping("Say", c.Say)
 	c.Mapping("Login", c.Login)
 	c.Mapping("CheckLogin", c.CheckLogin)
+	c.Mapping("UpVoice", c.UpVoice)
+}
+
+// UpVoice...
+// @Title UpVoice
+// @Description up voice to server,chnage to text
+// @Param file
+// @Success 200 {object} models.Talk
+// @Failure 403 :id is empty
+// @router /upVoice [get]
+func (c *TalkController) UpVoice() {
+	fmt.Println(123);
 }
 
 // Login ...
@@ -112,9 +124,13 @@ func (c *TalkController) CheckLogin()  {
 		c.ServeJSON();
 	}
 
-	fmt.Println(redis.Get(session_key));
+	sv, err := json.Marshal(redis.Get(session_key));
+	if err != nil {
+		fmt.Println(err);
+	}
+	fmt.Println(string(sv));
 
-	c.Data["json"] = map[string]string{"session_key" : session_key}
+	c.Data["json"] = map[string]string{"session_key" : string(sv)}
 	c.ServeJSON();
 }
 
