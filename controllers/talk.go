@@ -65,7 +65,7 @@ func (c *TalkController) URLMapping() {
 // @Failure 403 :id is empty
 // @router /upVoice [post]
 func (c *TalkController) UpVoice() {
-	fmt.Println(123);
+	fmt.Println(c.GetString("file"));
 }
 
 // Login ...
