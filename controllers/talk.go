@@ -71,13 +71,13 @@ func (c *TalkController) UpVoice() {
 		log.Fatal("getfile err ", err)
 	}
 	defer f.Close()
-	ferr := c.SaveToFile("file", "static/" + h.Filename + ".mp3") // 保存位置在 static/upload, 没有文件夹要先创建
+	ferr := c.SaveToFile("file", "static/" + h.Filename + ".pcm") // 保存位置在 static/upload, 没有文件夹要先创建
 	if ferr != nil {
 		fmt.Println(ferr);
 	}
 
 	//读取存储好的音频文件
-	voiceFile, err := os.Open("static/" + h.Filename + ".mp3");
+	voiceFile, err := os.Open("static/" + h.Filename + ".pcm");
 	if err != nil {
 		fmt.Println(err);
 	}
