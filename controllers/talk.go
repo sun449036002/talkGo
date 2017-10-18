@@ -15,6 +15,7 @@ import (
 	. "talkGo/models"
 	"talkGo/lib"
 	"log"
+	"strings"
 )
 
 
@@ -93,7 +94,7 @@ func (c *TalkController) UpVoice() {
 	token := c.getToken();
 	jsonMap := make(map[string]string);
 	jsonMap["token"] = token;
-	jsonMap["voice"] = string(b[:len]);
+	jsonMap["voice"] = strings.Replace(string(b[:len]),  "data:audio/webm;base64,", "", 1);
 	jsonMap["len"] = strconv.Itoa(len);
 	c.Data["json"] = jsonMap;
 	c.ServeJSON();
