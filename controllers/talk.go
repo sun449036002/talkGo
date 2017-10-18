@@ -76,6 +76,7 @@ func (c *TalkController) UpVoice() {
 	if ferr != nil {
 		fmt.Println(ferr);
 	}
+	fmt.Println(h);
 
 	//读取存储好的音频文件
 	voiceFile, err := os.Open("static/" + h.Filename + ".pcm");
