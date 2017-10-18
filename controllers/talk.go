@@ -77,7 +77,7 @@ func (c *TalkController) UpVoice() {
 	}
 
 	//读取存储好的音频文件
-	voiceFile, err := os.Open(beego.AppConfig.String("wxApiUrl") + "static/" + h.Filename + ".mp3");
+	voiceFile, err := os.Open("static/" + h.Filename + ".mp3");
 	if err != nil {
 		fmt.Println(err);
 	}
