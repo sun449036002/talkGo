@@ -7,6 +7,7 @@ import (
 	_ "github.com/astaxie/beego/cache/redis"
 	"github.com/astaxie/beego/httplib"
 	"encoding/json"
+	"encoding/base64"
 	"fmt"
 	"strconv"
 	"math/rand"
@@ -122,7 +123,7 @@ func (c *TalkController) UpVoice() {
 	token := c.getToken();
 	jsonMap := make(map[string]string);
 	jsonMap["token"] = token;
-	jsonMap["voice"] = string(b[:len]);
+	jsonMap["voice"] = base64.StdEncoding.EncodeToString(b[:len]);
 	jsonMap["len"] = strconv.Itoa(len);
 	c.Data["json"] = jsonMap;
 	c.ServeJSON();
