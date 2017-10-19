@@ -15,7 +15,6 @@ import (
 	. "talkGo/models"
 	"talkGo/lib"
 	"log"
-	"strings"
 )
 
 
@@ -72,14 +71,14 @@ func (c *TalkController) UpVoice() {
 		log.Fatal("getfile err ", err)
 	}
 	defer f.Close()
-	ferr := c.SaveToFile("file", "static/" + h.Filename + ".pcm") // 保存位置在 static/upload, 没有文件夹要先创建
+	ferr := c.SaveToFile("file", "static/" + h.Filename) // 保存位置在 static/upload, 没有文件夹要先创建
 	if ferr != nil {
 		fmt.Println(ferr);
 	}
 	fmt.Println(h);
 
 	//读取存储好的音频文件
-	voiceFile, err := os.Open("static/" + h.Filename + ".pcm");
+	voiceFile, err := os.Open("static/" + h.Filename);
 	if err != nil {
 		fmt.Println(err);
 	}
@@ -95,7 +94,7 @@ func (c *TalkController) UpVoice() {
 	token := c.getToken();
 	jsonMap := make(map[string]string);
 	jsonMap["token"] = token;
-	jsonMap["voice"] = strings.Replace(string(b[:len]),  "data:audio/webm;base64,", "", 1);
+	jsonMap["voice"] = string(b[:len]);
 	jsonMap["len"] = strconv.Itoa(len);
 	c.Data["json"] = jsonMap;
 	c.ServeJSON();
