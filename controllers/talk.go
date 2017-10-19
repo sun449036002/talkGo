@@ -106,7 +106,8 @@ func (c *TalkController) UpVoice() {
 
 
 	//读取存储好的音频文件
-	voiceFile, err := os.Open("/root/go/src/talkGo/static/wx-file.pcm");
+	voiceFile, err := os.Open("/root/go/src/talkGo/static/public/16k.pcm");
+	//voiceFile, err := os.Open("/root/go/src/talkGo/static/wx-file.pcm");
 	//voiceFile, err := os.Open("static/" + h.Filename);
 	if err != nil {
 		fmt.Println(err);
