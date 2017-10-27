@@ -59,6 +59,7 @@ func (c *TalkController) URLMapping() {
 	c.Mapping("Login", c.Login)
 	c.Mapping("CheckLogin", c.CheckLogin)
 	c.Mapping("UpVoice", c.UpVoice)
+	c.Mapping("upVoiceCallback", c.UpVoiceCallback)
 }
 
 // UpVoice...
@@ -104,6 +105,20 @@ func (c *TalkController) UpVoice() {
 	}
 	fmt.Printf("stdout:\n\n %s", bytes)
 
+	//BAI DU TOKEN
+	token := c.getToken();
+
+	//发送请求
+	req := httplib.Post("http://vop.baidu.com/server_api")
+	req.Debug(true)
+	req.Header("Content-Type","application/json")
+	req.Param("format", "pcm")
+	req.Param("rate", "16000")
+	req.Param("token", token)
+	req.Param("cuid", "aip-cxy")
+	req.Param("url", beego.AppConfig.String("rooturl") + "static/wx-file.pcm")
+	req.Param("callback", beego.AppConfig.String("rooturl") + "upVoiceCallback")
+
 
 	//读取存储好的音频文件
 	voiceFile, err := os.Open("/root/go/src/talkGo/static/public/16k.pcm");
@@ -121,7 +136,6 @@ func (c *TalkController) UpVoice() {
 		fmt.Println(len);
 	}
 	//输出JSON
-	token := c.getToken();
 	jsonMap := make(map[string]string);
 	jsonMap["token"] = token;
 	jsonMap["rawVoice"] = string(b[:len]);
@@ -130,6 +144,18 @@ func (c *TalkController) UpVoice() {
 	c.Data["json"] = jsonMap;
 	c.ServeJSON();
 }
+
+// UpVoiceCallback...
+// @Title UpVoice
+// @Description up voice to server,chnage to text
+// @Param	id		path 	string	true		"The key for staticblock"
+// @Success 200 {object} models.Talk
+// @Failure 403 :id is empty
+// @router /upVoiceCallback [post]
+func (c *TalkController) UpVoiceCallback() {
+	fmt.Println(c.Ctx.Input.RequestBody);
+}
+
 
 // Login ...
 // @Title Login
