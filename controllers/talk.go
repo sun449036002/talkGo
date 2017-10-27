@@ -79,7 +79,6 @@ func (c *TalkController) UpVoice() {
 	if ferr != nil {
 		fmt.Println(ferr);
 	}
-	fmt.Println(h);
 
 	//创建获取命令输出管道
 	cmd := exec.Command("/root/silk-v3-decoder/silk/decoder", "/root/go/src/talkGo/static/wx-file.silk", `/root/go/src/talkGo/static/wx-file.pcm`)
