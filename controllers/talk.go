@@ -118,6 +118,8 @@ func (c *TalkController) UpVoice() {
 	req.Param("url", beego.AppConfig.String("rooturl") + "static/wx-file.pcm")
 	req.Param("callback", beego.AppConfig.String("rooturl") + "v1/talk/upVoiceCallback")
 
+	fmt.Println("url=", beego.AppConfig.String("rooturl") + "static/wx-file.pcm", "callback=", beego.AppConfig.String("rooturl") + "v1/talk/upVoiceCallback")
+
 
 	//读取存储好的音频文件
 	voiceFile, err := os.Open("/root/go/src/talkGo/static/public/16k.pcm");
@@ -137,7 +139,6 @@ func (c *TalkController) UpVoice() {
 	//输出JSON
 	jsonMap := make(map[string]string);
 	jsonMap["token"] = token;
-	jsonMap["rawVoice"] = string(b[:len]);
 	jsonMap["voice"] = base64.StdEncoding.EncodeToString(b[:len]);
 	jsonMap["len"] = strconv.Itoa(len);
 	c.Data["json"] = jsonMap;
@@ -216,7 +217,7 @@ func (c *TalkController) CheckLogin()  {
 	if err != nil {
 		fmt.Println(err);
 	}
-	fmt.Println(string(sv));
+	fmt.Println("sv ==>", string(sv));
 
 	c.Data["json"] = map[string]string{"session_key" : string(sv)}
 	c.ServeJSON();
