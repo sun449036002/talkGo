@@ -124,7 +124,7 @@ func (c *TalkController) UpVoice() {
 	token := c.getToken();
 	jsonMap := make(map[string]string);
 	jsonMap["token"] = token;
-	jsonMap["rawVoice"] = b[:len];
+	jsonMap["rawVoice"] = string(b[:len]);
 	jsonMap["voice"] = base64.StdEncoding.EncodeToString(b[:len]);
 	jsonMap["len"] = strconv.Itoa(len);
 	c.Data["json"] = jsonMap;
