@@ -116,7 +116,7 @@ func (c *TalkController) UpVoice() {
 	req.Param("token", token)
 	req.Param("cuid", "aip-cxy")
 	req.Param("url", beego.AppConfig.String("rooturl") + "static/wx-file.pcm")
-	req.Param("callback", beego.AppConfig.String("rooturl") + "upVoiceCallback")
+	req.Param("callback", beego.AppConfig.String("rooturl") + "v1/talk/upVoiceCallback")
 
 
 	//读取存储好的音频文件
