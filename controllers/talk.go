@@ -81,7 +81,7 @@ func (c *TalkController) UpVoice() {
 	}
 
 	//创建获取命令输出管道
-	cmd := exec.Command("/root/silk-v3-decoder/silk/decoder", "/root/go/src/talkGo/static/wx-file.silk", `/root/go/src/talkGo/static/wx-file.pcm`)
+	cmd := exec.Command("/root/silk-v3-decoder/silk/decoder", "/root/go/src/talkGo/static/wx-file.silk", `wav`)
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
 		fmt.Printf("Error:can not obtain stdout pipe for command:%s\n", err)
@@ -120,10 +120,8 @@ func (c *TalkController) UpVoice() {
 
 	fmt.Println("url=", beego.AppConfig.String("rooturl") + "static/wx-file.pcm", "callback=", beego.AppConfig.String("rooturl") + "v1/talk/upVoiceCallback")
 
-
 	//读取存储好的音频文件
-	voiceFile, err := os.Open("/root/go/src/talkGo/static/public/16k.pcm");
-	//voiceFile, err := os.Open("/root/go/src/talkGo/static/wx-file.pcm");
+	voiceFile, err := os.Open("/root/go/src/talkGo/static/wx-file.wav");
 	//voiceFile, err := os.Open("static/" + h.Filename);
 	if err != nil {
 		fmt.Println(err);
