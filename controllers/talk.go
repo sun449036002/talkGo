@@ -81,7 +81,8 @@ func (c *TalkController) UpVoice() {
 	}
 
 	//创建获取命令输出管道
-	cmd := exec.Command("/root/silk-v3-decoder/silk/decoder", "/root/go/src/talkGo/static/" + h.Filename, "/root/go/src/talkGo/static/wx-file.pcm")
+	fmt.Println("/root/go/src/talkGo/static/" + h.Filename);
+	cmd := exec.Command("/root/silk-v3-decoder/silk/decoder", "/root/go/src/talkGo/static/" + h.Filename, "/root/go/src/talkGo/static/wx-file.wav")
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
 		fmt.Printf("Error:can not obtain stdout pipe for command:%s\n", err)
@@ -111,17 +112,17 @@ func (c *TalkController) UpVoice() {
 	req := httplib.Post("http://vop.baidu.com/server_api")
 	req.Debug(true)
 	req.Header("Content-Type","application/json")
-	req.Param("format", "pcm")
+	req.Param("format", "wav")
 	req.Param("rate", "16000")
 	req.Param("token", token)
 	req.Param("cuid", "aip-cxy")
-	req.Param("url", beego.AppConfig.String("rooturl") + "static/wx-file.pcm")
+	req.Param("url", beego.AppConfig.String("rooturl") + "static/wx-file.wav")
 	req.Param("callback", beego.AppConfig.String("rooturl") + "v1/talk/upVoiceCallback")
 
-	fmt.Println("url=", beego.AppConfig.String("rooturl") + "static/wx-file.pcm", "callback=", beego.AppConfig.String("rooturl") + "v1/talk/upVoiceCallback")
+	fmt.Println("url=", beego.AppConfig.String("rooturl") + "static/wx-file.wav", "callback=", beego.AppConfig.String("rooturl") + "v1/talk/upVoiceCallback")
 
 	//读取存储好的音频文件
-	voiceFile, err := os.Open("/root/go/src/talkGo/static/wx-file.pcm");
+	voiceFile, err := os.Open("/root/go/src/talkGo/static/wx-file.wav");
 	//voiceFile, err := os.Open("static/" + h.Filename);
 	if err != nil {
 		fmt.Println(err);
