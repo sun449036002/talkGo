@@ -132,7 +132,7 @@ func (c *TalkController) UpVoice() {
 	//发起转换成文字请求
 	req := httplib.Post("http://vop.baidu.com/server_api")
 	req.Debug(true)
-	req.Header("Content-Type","application/json;charset=utf-8;")
+	req.Header("Content-Type","application/json")
 	req.Param("format", "pcm")
 	req.Param("rate", "8000")
 	req.Param("channel", "1")
