@@ -128,6 +128,20 @@ func (c *TalkController) UpVoice() {
 	jsonMap["voice"] = base64.StdEncoding.EncodeToString(b[:len]);
 	jsonMap["len"] = strconv.Itoa(len);
 	c.Data["json"] = jsonMap;
+
+	//发起转换成文字请求
+	req := httplib.Post("http://vop.baidu.com/server_api")
+	req.Debug(true)
+	req.Header("Content-Type","application/json;charset=utf-8;")
+	req.Param("format", "pcm")
+	req.Param("rate", "8000")
+	req.Param("channel", "1")
+	req.Param("cuid", "iamatest")
+	req.Param("token", token)
+	req.Param("speech", jsonMap["voice"])
+	req.Param("len", strconv.Itoa(len))
+	fmt.Println(req.String());
+
 	c.ServeJSON();
 }
 
