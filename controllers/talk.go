@@ -82,7 +82,7 @@ func (c *TalkController) UpVoice() {
 
 	//创建获取命令输出管道
 	fmt.Println("/root/go/src/talkGo/static/" + h.Filename);
-	cmd := exec.Command("sh", "/root/silk-v3-decoder/converter.sh",  "/root/go/src/talkGo/static/" + h.Filename, "wav")
+	cmd := exec.Command("sh", "/root/silk-v3-decoder/converter.sh",  "/root/go/src/talkGo/static/" + h.Filename, "pcm")
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
 		fmt.Printf("Error:can not obtain stdout pipe for command:%s\n", err)
@@ -109,7 +109,7 @@ func (c *TalkController) UpVoice() {
 	token := c.getToken();
 
 	//读取存储好的音频文件
-	voiceFile, err := os.Open("/root/go/src/talkGo/static/wx-file.wav");
+	voiceFile, err := os.Open("/root/go/src/talkGo/static/wx-file.pcm");
 	//voiceFile, err := os.Open("static/" + h.Filename);
 	if err != nil {
 		fmt.Println(err);
