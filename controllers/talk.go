@@ -147,7 +147,7 @@ func (c *TalkController) UpVoice() {
 	voiceJson.Channel = "1";
 	voiceJson.Cuid = "iamatest";
 	voiceJson.Token = token;
-	voiceJson.Speech = jsonMap["voice"];
+	voiceJson.Speech = ""//jsonMap["voice"];
 	voiceJson.Len = strconv.Itoa(len);
 	req := httplib.Post("http://vop.baidu.com/server_api")
 	req.Debug(true)
