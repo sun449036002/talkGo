@@ -152,7 +152,11 @@ func (c *TalkController) UpVoice() {
 	req := httplib.Post("http://vop.baidu.com/server_api")
 	req.Debug(true)
 	req.Header("Content-Type","application/json")
-	_, eor := req.JSONBody(voiceJson);
+
+	byts,_ := json.Marshal(voiceJson)
+	fmt.Println(string(byts));
+
+	_, eor := req.JSONBody(voiceJson)
 	if eor != nil {
 		fmt.Println(eor);
 	}
