@@ -48,6 +48,17 @@ type TalkController struct {
 	beego.Controller
 }
 
+type voiceJson struct {
+	format string
+	rate string
+	channel string
+	cuid string
+	token string
+	speech string
+	len string
+}
+
+
 // URLMapping ...
 func (c *TalkController) URLMapping() {
 	/*c.Mapping("Post", c.Post)
@@ -130,16 +141,25 @@ func (c *TalkController) UpVoice() {
 	c.Data["json"] = jsonMap;
 
 	//发起转换成文字请求
+	var voiceJson voiceJson;
+	voiceJson.format = "pcm";
+	voiceJson.rate = "8000";
+	voiceJson.channel = "1";
+	voiceJson.cuid = "iamatest";
+	voiceJson.token = token;
+	voiceJson.speech = jsonMap["voice"];
+	voiceJson.len = strconv.Itoa(len);
 	req := httplib.Post("http://vop.baidu.com/server_api")
 	req.Debug(true)
 	req.Header("Content-Type","application/json")
-	req.Param("format", "pcm")
-	req.Param("rate", "8000")
-	req.Param("channel", "1")
-	req.Param("cuid", "iamatest")
-	req.Param("token", token)
-	req.Param("speech", jsonMap["voice"])
-	req.Param("len", strconv.Itoa(len))
+	req.JSONBody(voiceJson);
+	//req.Param("format", "pcm")
+	//req.Param("rate", "8000")
+	//req.Param("channel", "1")
+	//req.Param("cuid", "iamatest")
+	//req.Param("token", token)
+	//req.Param("speech", jsonMap["voice"])
+	//req.Param("len", strconv.Itoa(len))
 	fmt.Println(req.String());
 
 	c.ServeJSON();
