@@ -15,9 +15,9 @@ import (
 	"time"
 	. "talkGo/models"
 	"talkGo/lib"
-	"log"
-	"io/ioutil"
-	"os/exec"
+	//"log"
+	//"io/ioutil"
+	//"os/exec"
 )
 
 
@@ -81,7 +81,7 @@ func (c *TalkController) URLMapping() {
 // @Failure 403 :id is empty
 // @router /upVoice [post]
 func (c *TalkController) UpVoice() {
-	f,h,err := c.GetFile("file");
+	/*f,h,err := c.GetFile("file");
 	if err != nil {
 		log.Fatal("getfile err ", err)
 	}
@@ -114,7 +114,7 @@ func (c *TalkController) UpVoice() {
 		fmt.Println("wait:", err.Error())
 		return
 	}
-	fmt.Printf("stdout:\n\n %s", bytes)
+	fmt.Printf("stdout:\n\n %s", bytes)*/
 
 	//BAI DU TOKEN
 	token := c.getToken();
