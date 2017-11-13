@@ -143,7 +143,7 @@ func (c *TalkController) UpVoice() {
 	//发起转换成文字请求
 	var voiceJson voiceJson;
 	voiceJson.Format = "pcm";
-	voiceJson.Rate = "8000";
+	voiceJson.Rate = "16000";
 	voiceJson.Channel = "1";
 	voiceJson.Cuid = "iamatest";
 	voiceJson.Token = token;
