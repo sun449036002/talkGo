@@ -50,12 +50,12 @@ type TalkController struct {
 
 type voiceJson struct {
 	Format string `json:"format"`
-	Rate string `json:"rate"`
-	Channel string `json:"channel"`
+	Rate int `json:"rate"`
+	Channel int `json:"channel"`
 	Cuid string `json:"cuid"`
 	Token string `json:"token"`
 	Speech string `json:"speech"`
-	Len string `json:"len"`
+	Len int `json:"len"`
 }
 
 
@@ -143,12 +143,12 @@ func (c *TalkController) UpVoice() {
 	//发起转换成文字请求
 	var voiceJson voiceJson;
 	voiceJson.Format = "pcm";
-	voiceJson.Rate = "16000";
-	voiceJson.Channel = "1";
+	voiceJson.Rate = 16000;
+	voiceJson.Channel = 1;
 	voiceJson.Cuid = "iamatest";
 	voiceJson.Token = token;
 	voiceJson.Speech = jsonMap["voice"];
-	voiceJson.Len = strconv.Itoa(len);
+	voiceJson.Len = len;
 	req := httplib.Post("http://vop.baidu.com/server_api")
 	req.Debug(true)
 	req.Header("Content-Type","application/json")
