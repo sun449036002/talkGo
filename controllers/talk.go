@@ -18,6 +18,9 @@ import (
 	//"log"
 	//"io/ioutil"
 	//"os/exec"
+	"log"
+	"os/exec"
+	"io/ioutil"
 )
 
 
@@ -81,7 +84,7 @@ func (c *TalkController) URLMapping() {
 // @Failure 403 :id is empty
 // @router /upVoice [post]
 func (c *TalkController) UpVoice() {
-	/*f,h,err := c.GetFile("file");
+	f,h,err := c.GetFile("file");
 	if err != nil {
 		log.Fatal("getfile err ", err)
 	}
@@ -114,7 +117,7 @@ func (c *TalkController) UpVoice() {
 		fmt.Println("wait:", err.Error())
 		return
 	}
-	fmt.Printf("stdout:\n\n %s", bytes)*/
+	fmt.Printf("stdout:\n\n %s", bytes)
 
 	//BAI DU TOKEN
 	token := c.getToken();
@@ -153,20 +156,13 @@ func (c *TalkController) UpVoice() {
 	req.Debug(true)
 	req.Header("Content-Type","application/json")
 
-	byts,_ := json.Marshal(voiceJson)
-	fmt.Println(string(byts));
-
+	//查看 POST 的 JSON 内容
+	//byts,_ := json.Marshal(voiceJson)
+	//fmt.Println(string(byts));
 	_, eor := req.JSONBody(voiceJson)
 	if eor != nil {
 		fmt.Println(eor);
 	}
-	//req.Param("format", "pcm")
-	//req.Param("rate", "8000")
-	//req.Param("channel", "1")
-	//req.Param("cuid", "iamatest")
-	//req.Param("token", token)
-	//req.Param("speech", jsonMap["voice"])
-	//req.Param("len", strconv.Itoa(len))
 	fmt.Println(req.String());
 
 	c.ServeJSON();
