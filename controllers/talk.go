@@ -143,6 +143,10 @@ func (c *TalkController) UpVoice() {
 		if er != nil {
 			fmt.Println(er)
 		}
+
+		//将我说的话放到返回数据中
+		jsonMap["whatisay"] = voiceResStruct.Result[0]
+
 		c.Data["json"] = jsonMap
 	}
 
