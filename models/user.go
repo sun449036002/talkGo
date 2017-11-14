@@ -20,17 +20,24 @@ type Profile struct {
 	Email   string
 }
 
+func init()  {
+	fmt.Println("user model init")
+}
+
 func (user *User) NewUser() error  {
 	u := User{Openid:user.Openid}
 
+	fmt.Println(user.Openid)
+
 	o := orm.NewOrm()
 	if o == nil {
+		fmt.Println("orm init faild inside");
 		return errors.New("orm init faild");
 	}
 
 	err := o.Read(&u)
 	if err == orm.ErrNoRows {
-		id, err := o.Insert(&user)
+		id, err := o.Insert(user)
 		if err != nil {
 			fmt.Println("insert bad")
 			return err;
