@@ -22,16 +22,14 @@ func init()  {
 func (user *User) NewUser() error  {
 	u := new(User)
 	u.Openid = user.Openid
-	fmt.Println(u)
-
 	o := orm.NewOrm()
 	if o == nil {
 		fmt.Println("orm init faild inside");
 		return errors.New("orm init faild");
 	}
 
+	//根据 openid 查询 ，默认是主键查询
 	err := o.Read(u, "openid")
-	fmt.Println(u)
 	fmt.Println("read error", err)
 	if err == orm.ErrNoRows {
 		user.Uri = lib.GetRandomString(16)

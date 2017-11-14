@@ -158,6 +158,8 @@ func (c *TalkController) UpVoice() {
 // @router /login [get]
 func (c *TalkController) Login()  {
 	code := c.GetString("code")
+	userinfo := c.GetString("userinfo")
+	fmt.Println(userinfo)
 
 	url := beego.AppConfig.String("wxApiUrl") + "sns/jscode2session?appid=" + beego.AppConfig.String("wxSmallAppId") + "&secret=" + beego.AppConfig.String("wxSmallSecret") + "&js_code=" + code + "&grant_type=authorization_code"
 	fmt.Println(url)
