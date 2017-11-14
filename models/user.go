@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/astaxie/beego/orm"
 	"talkGo/lib"
+	//. "talkGo/structs"
 	"errors"
 )
 
@@ -12,7 +13,9 @@ type User struct {
 	Uri string `orm:"size(16);index;"`
 	Username string
 	Openid string
+	UserJson string `orm:"type(text)"`
 }
+
 
 func init()  {
 	//RegisterModel 放在 msg Model中

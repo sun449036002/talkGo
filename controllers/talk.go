@@ -198,6 +198,7 @@ func (c *TalkController) Login()  {
 	var u User;
 	u.Openid = wxSession.Openid
 	u.Username = userinfo.NickName
+	u.UserJson = userinfoJson
 	err = u.NewUser()
 	fmt.Println(err)
 
