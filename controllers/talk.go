@@ -139,6 +139,7 @@ func (c *TalkController) UpVoice() {
 		fmt.Println(err)
 	}
 
+	fmt.Println(voiceResStruct);
 	if voiceResStruct.ErrNo == 0 {
 		jsonMap, er := c._say(voiceResStruct.Result[0])
 		if er != nil {
