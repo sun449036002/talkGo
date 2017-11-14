@@ -30,7 +30,7 @@ func (user *User) NewUser() error  {
 		return errors.New("orm init faild");
 	}
 
-	err := o.Read(u)
+	err := o.Read(u, "openid")
 	fmt.Println(u)
 	fmt.Println("read error", err)
 	if err == orm.ErrNoRows {
