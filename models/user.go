@@ -30,6 +30,8 @@ func (user *User) NewUser() error  {
 	}
 
 	err := o.Read(&u)
+	fmt.Println(u)
+	fmt.Println("read error", err)
 	if err == orm.ErrNoRows {
 		user.Uri = lib.GetRandomString(16)
 		id, err := o.Insert(user)
@@ -41,7 +43,5 @@ func (user *User) NewUser() error  {
 			return  nil;
 		}
 	}
-
-	fmt.Println(u);
 	return nil;
 }
