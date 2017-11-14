@@ -189,8 +189,8 @@ func (c *TalkController) Login()  {
 	var u User;
 	u.Openid = wxSession.Openid
 	u.Username = "test"
-	//err = u.NewUser()
-	//fmt.Println(err)
+	err = u.NewUser()
+	fmt.Println(err)
 
 	c.Data["json"] = map[string]string{"session_key" : sessionCacheKey}
 	c.ServeJSON()
