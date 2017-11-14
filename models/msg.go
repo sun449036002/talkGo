@@ -14,7 +14,7 @@ type Msg struct {
 }
 
 func init() {
-	orm.RegisterModel(new(Msg));
+	orm.RegisterModel(new(Msg), new(User));
 
 	// 注册驱动
 	orm.RegisterDataBase("default", "mysql", "root:mm@tcp(127.0.0.1:3306)/sun?charset=utf8");

@@ -3,21 +3,15 @@ package models
 import (
 	"fmt"
 	"github.com/astaxie/beego/orm"
+	"talkGo/lib"
 	"errors"
 )
 
 type User struct {
 	Id       int
+	Uri string `orm:"size(16);index;"`
 	Username string
 	Openid string
-	Profile  Profile
-}
-
-type Profile struct {
-	Gender  string
-	Age     int
-	Address string
-	Email   string
 }
 
 func init()  {
@@ -37,6 +31,7 @@ func (user *User) NewUser() error  {
 
 	err := o.Read(&u)
 	if err == orm.ErrNoRows {
+		user.Uri = lib.GetRandomString(16)
 		id, err := o.Insert(user)
 		if err != nil {
 			fmt.Println("insert bad")
