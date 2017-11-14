@@ -158,9 +158,15 @@ func (c *TalkController) UpVoice() {
 // @router /login [get]
 func (c *TalkController) Login()  {
 	code := c.GetString("code")
-	userinfo := c.GetString("userinfo")
+	userinfoJson := c.GetString("userinfo")
 	fmt.Print("userinfo ===> ")
-	fmt.Println(userinfo)
+	fmt.Println(userinfoJson)
+
+	userinfo := new(Userinfo)
+	err := json.Unmarshal([]byte(userinfoJson), userinfo)
+	if err != nil {
+		fmt.Println("userinfo json 失败")
+	}
 
 	url := beego.AppConfig.String("wxApiUrl") + "sns/jscode2session?appid=" + beego.AppConfig.String("wxSmallAppId") + "&secret=" + beego.AppConfig.String("wxSmallSecret") + "&js_code=" + code + "&grant_type=authorization_code"
 	fmt.Println(url)
@@ -191,7 +197,7 @@ func (c *TalkController) Login()  {
 	//保存用户
 	var u User;
 	u.Openid = wxSession.Openid
-	u.Username = "test"
+	u.Username = userinfo.NickName
 	err = u.NewUser()
 	fmt.Println(err)
 
