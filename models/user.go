@@ -15,13 +15,14 @@ type User struct {
 }
 
 func init()  {
+	//RegisterModel 放在 msg Model中
 	fmt.Println("user model init")
 }
 
 func (user *User) NewUser() error  {
-	u := User{Openid:user.Openid}
-
-	fmt.Println(user.Openid)
+	u := new(User)
+	u.Openid = user.Openid
+	fmt.Println(u)
 
 	o := orm.NewOrm()
 	if o == nil {
@@ -30,7 +31,6 @@ func (user *User) NewUser() error  {
 	}
 
 	err := o.Read(&u)
-	fmt.Println(u)
 	fmt.Println("read error", err)
 	if err == orm.ErrNoRows {
 		user.Uri = lib.GetRandomString(16)

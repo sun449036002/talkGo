@@ -1,8 +1,7 @@
 package models
 
 import (
-	"github.com/astaxie/beego/orm"
-	_ "github.com/go-sql-driver/mysql"
+	"fmt"
 )
 
 type Msg struct {
@@ -14,11 +13,5 @@ type Msg struct {
 }
 
 func init() {
-	orm.RegisterModel(new(Msg), new(User));
-
-	// 注册驱动
-	orm.RegisterDataBase("default", "mysql", "root:mm@tcp(127.0.0.1:3306)/sun?charset=utf8");
-
-	dropOldTable := false;
-	orm.RunSyncdb("default", dropOldTable, true);
+	fmt.Println("msg model is init")
 }
