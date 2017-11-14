@@ -3,6 +3,7 @@ package models
 import (
 	"fmt"
 	"github.com/astaxie/beego/orm"
+	"errors"
 )
 
 type User struct {
@@ -19,12 +20,12 @@ type Profile struct {
 	Email   string
 }
 
-func (user *User) NewUser() bool  {
+func (user *User) NewUser() error  {
 	u := User{Openid:user.Openid}
 
 	o := orm.NewOrm()
 	if o == nil {
-		return false;
+		return errors.New("orm init faild");
 	}
 
 	err := o.Read(&u)
@@ -32,13 +33,13 @@ func (user *User) NewUser() bool  {
 		id, err := o.Insert(&user)
 		if err != nil {
 			fmt.Println("insert bad")
-			return false;
+			return err;
 		} else {
 			fmt.Println("insert ok", id)
-			return  true;
+			return  nil;
 		}
 	}
 
 	fmt.Println(u);
-	return true;
+	return nil;
 }
