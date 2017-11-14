@@ -14,53 +14,17 @@ import (
 	"os"
 	"time"
 	. "talkGo/models"
+	. "talkGo/structs"
 	"talkGo/lib"
-	//"log"
-	//"io/ioutil"
-	//"os/exec"
 	"log"
 	"os/exec"
 	"io/ioutil"
 )
 
-
-//图灵
-type Tl struct {
-	Code int
-	Text string
-}
-
-//百度Token
-type BdToken struct {
-	Access_token string
-	Refresh_token string
-	Session_key string
-	Scope string
-	Session_secret string
-	Expires_in int64
-}
-
-type WxSession struct {
-	Openid string
-	Session_key string
-	Unionid string
-}
-
 // TalkController operations for Talk
 type TalkController struct {
 	beego.Controller
 }
-
-type voiceJson struct {
-	Format string `json:"format"`
-	Rate int `json:"rate"`
-	Channel int `json:"channel"`
-	Cuid string `json:"cuid"`
-	Token string `json:"token"`
-	Speech string `json:"speech"`
-	Len int `json:"len"`
-}
-
 
 // URLMapping ...
 func (c *TalkController) URLMapping() {
@@ -84,18 +48,18 @@ func (c *TalkController) URLMapping() {
 // @Failure 403 :id is empty
 // @router /upVoice [post]
 func (c *TalkController) UpVoice() {
-	f,h,err := c.GetFile("file");
+	f,h,err := c.GetFile("file")
 	if err != nil {
 		log.Fatal("getfile err ", err)
 	}
 	defer f.Close()
 	ferr := c.SaveToFile("file", "static/" + h.Filename) // 保存位置在 static/upload, 没有文件夹要先创建
 	if ferr != nil {
-		fmt.Println(ferr);
+		fmt.Println(ferr)
 	}
 
 	//创建获取命令输出管道
-	fmt.Println("/root/go/src/talkGo/static/" + h.Filename);
+	fmt.Println("/root/go/src/talkGo/static/" + h.Filename)
 	cmd := exec.Command("sh", "/root/silk-v3-decoder/converter.sh",  "/root/go/src/talkGo/static/" + h.Filename, "pcm")
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
@@ -120,52 +84,69 @@ func (c *TalkController) UpVoice() {
 	fmt.Printf("stdout:\n\n %s", bytes)
 
 	//BAI DU TOKEN
-	token := c.getToken();
+	token := c.getToken()
 
 	//读取存储好的音频文件
-	voiceFile, err := os.Open("/root/go/src/talkGo/static/wx-file.pcm");
-	//voiceFile, err := os.Open("static/" + h.Filename);
+	voiceFile, err := os.Open("/root/go/src/talkGo/static/wx-file.pcm")
+	//voiceFile, err := os.Open("static/" + h.Filename)
 	if err != nil {
-		fmt.Println(err);
+		fmt.Println(err)
 	}
-	var b = make([]byte, 1024 * 1024);
-	len, frerr := voiceFile.Read(b);
+	var b = make([]byte, 1024 * 1024)
+	len, frerr := voiceFile.Read(b)
 	if frerr != nil {
-		fmt.Println(frerr);
+		fmt.Println(frerr)
 	}
 	if len > 0 {
-		fmt.Println(len);
+		fmt.Println(len)
 	}
+
 	//输出JSON
-	jsonMap := make(map[string]string);
-	jsonMap["token"] = token;
-	jsonMap["voice"] = base64.StdEncoding.EncodeToString(b[:len]);
-	jsonMap["len"] = strconv.Itoa(len);
-	c.Data["json"] = jsonMap;
+	jsonMap := make(map[string]string)
+	jsonMap["token"] = token
+	jsonMap["voice"] = base64.StdEncoding.EncodeToString(b[:len])
+	jsonMap["len"] = strconv.Itoa(len)
+	c.Data["json"] = jsonMap
 
 	//发起转换成文字请求
-	var voiceJson voiceJson;
-	voiceJson.Format = "pcm";
-	voiceJson.Rate = 16000;
-	voiceJson.Channel = 1;
-	voiceJson.Cuid = "iamatest";
-	voiceJson.Token = token;
-	voiceJson.Speech = jsonMap["voice"];
-	voiceJson.Len = len;
+	var voiceJs VoiceJson
+	voiceJs.Format = "pcm"
+	voiceJs.Rate = 16000
+	voiceJs.Channel = 1
+	voiceJs.Cuid = "iamatest"
+	voiceJs.Token = token
+	voiceJs.Speech = jsonMap["voice"]
+	voiceJs.Len = len
 	req := httplib.Post("http://vop.baidu.com/server_api")
 	req.Debug(true)
 	req.Header("Content-Type","application/json")
 
 	//查看 POST 的 JSON 内容
 	//byts,_ := json.Marshal(voiceJson)
-	//fmt.Println(string(byts));
-	_, eor := req.JSONBody(voiceJson)
+	//fmt.Println(string(byts))
+	_, eor := req.JSONBody(voiceJs)
 	if eor != nil {
-		fmt.Println(eor);
+		fmt.Println(eor)
 	}
-	fmt.Println(req.String());
+	jsonStr, err := req.String()
+	if err != nil {
+		fmt.Println(err)
+	}
+	var voiceResStruct VoiceResStruct
+	err = json.Unmarshal([]byte(jsonStr), &voiceResStruct);
+	if err != nil {
+		fmt.Println(err)
+	}
 
-	c.ServeJSON();
+	if voiceResStruct.ErrNo == 0 {
+		jsonMap, er := c._say(voiceResStruct.Result[0])
+		if er != nil {
+			fmt.Println(er)
+		}
+		c.Data["json"] = jsonMap
+	}
+
+	c.ServeJSON()
 }
 
 // UpVoiceCallback...
@@ -176,7 +157,7 @@ func (c *TalkController) UpVoice() {
 // @Failure 403 :id is empty
 // @router /upVoiceCallback [post]
 func (c *TalkController) UpVoiceCallback() {
-	fmt.Println(c.Ctx.Input.RequestBody);
+	fmt.Println(c.Ctx.Input.RequestBody)
 }
 
 
@@ -188,36 +169,36 @@ func (c *TalkController) UpVoiceCallback() {
 // @Failure 403 :id is empty
 // @router /login [get]
 func (c *TalkController) Login()  {
-	code := c.GetString("code");
+	code := c.GetString("code")
 
-	url := beego.AppConfig.String("wxApiUrl") + "sns/jscode2session?appid=" + beego.AppConfig.String("wxSmallAppId") + "&secret=" + beego.AppConfig.String("wxSmallSecret") + "&js_code=" + code + "&grant_type=authorization_code";
-	fmt.Println(url);
-	req := httplib.Get(url);
-	sessionJson,err:= req.String();
+	url := beego.AppConfig.String("wxApiUrl") + "sns/jscode2session?appid=" + beego.AppConfig.String("wxSmallAppId") + "&secret=" + beego.AppConfig.String("wxSmallSecret") + "&js_code=" + code + "&grant_type=authorization_code"
+	fmt.Println(url)
+	req := httplib.Get(url)
+	sessionJson,err:= req.String()
 	if err != nil {
-		c.Data["json"] = error(err);
-		c.ServeJSON();
+		c.Data["json"] = error(err)
+		c.ServeJSON()
 	}
 
-	var wxSession WxSession;
-	err = json.Unmarshal([]byte(sessionJson), &wxSession);
+	var wxSession WxSession
+	err = json.Unmarshal([]byte(sessionJson), &wxSession)
 	if err != nil {
-		c.Data["json"] = error(err);
-		c.ServeJSON();
+		c.Data["json"] = error(err)
+		c.ServeJSON()
 	}
 
 	redis,err := cache.NewCache("redis", `{"key":"talkRedis","conn":"127.0.0.1:6379","dbNum":"0","password":""}`)
 	if err != nil {
-		fmt.Println(err);
-		c.Data["json"] = error(err);
-		c.ServeJSON();
+		fmt.Println(err)
+		c.Data["json"] = error(err)
+		c.ServeJSON()
 	}
 
-	sessionCacheKey := lib.GetRandomString(16);
+	sessionCacheKey := lib.GetRandomString(16)
 	redis.Put(sessionCacheKey, map[string]string{"openid" : wxSession.Openid, "session_key" : wxSession.Session_key}, 300 * time.Second)
 
 	c.Data["json"] = map[string]string{"session_key" : sessionCacheKey}
-	c.ServeJSON();
+	c.ServeJSON()
 }
 
 // CheckLogin ...
@@ -228,22 +209,22 @@ func (c *TalkController) Login()  {
 // @Failure 403 :id is empty
 // @router /check_login [get]
 func (c *TalkController) CheckLogin()  {
-	session_key := c.GetString("session_key");
+	session_key := c.GetString("session_key")
 	redis,err := cache.NewCache("redis", `{"key":"talkRedis","conn":"127.0.0.1:6379","dbNum":"0","password":""}`)
 	if err != nil {
-		fmt.Println(err);
-		c.Data["json"] = error(err);
-		c.ServeJSON();
+		fmt.Println(err)
+		c.Data["json"] = error(err)
+		c.ServeJSON()
 	}
 
-	sv, err := json.Marshal(redis.Get(session_key));
+	sv, err := json.Marshal(redis.Get(session_key))
 	if err != nil {
-		fmt.Println(err);
+		fmt.Println(err)
 	}
-	fmt.Println("sv ==>", string(sv));
+	fmt.Println("sv ==>", string(sv))
 
 	c.Data["json"] = map[string]string{"session_key" : string(sv)}
-	c.ServeJSON();
+	c.ServeJSON()
 }
 
 // Post ...
@@ -265,64 +246,15 @@ func (c *TalkController) Post() {
 // @Failure 403 :id is empty
 // @router /:id [get]
 func (c *TalkController) Say() {
-	msg := c.GetString("msg");
+	msg := c.GetString("msg")
 
-	//接口访问
-	txUrl := beego.AppConfig.String("TLApi") + "?userid=1&key=" + beego.AppConfig.String("TLKey") + "&info=" + msg;
-	req := httplib.Get(txUrl)
-	resJson, err := req.String();
-
-	if err != nil {
-		c.Data["json"] = error(err);
-		c.ServeJSON();
-	}
-
-	//fmt.Println("转换前", resJson);
-	var tl Tl;
-	err = json.Unmarshal([]byte(resJson), &tl);
+	jsonMap,err :=c._say(msg)
 	if err != nil {
 		fmt.Println(err);
 	}
-
-	jsonMap := make(map[string]string);
-	jsonMap["code"] = strconv.Itoa(tl.Code);
-	jsonMap["msg"] = tl.Text;
-
-	//合成语音
-	token := c.getToken();
-	audioUrl := beego.AppConfig.String("BdText2AudioApi") + "?tex=" + tl.Text + "&lan=zh&ctp=1&cuid=123321&per=4&tok=" + token;
-	res := httplib.Get(audioUrl);
-
-	resp,err := res.Response();
-	if err != nil {
-		fmt.Println(err);
-	}
-
-	if resp.Header.Get("Content-Type") == "audio/mp3" {
-		//保存文件
-		mp3_id := strconv.Itoa(rand.Int());
-		res.ToFile("./static/" + mp3_id + ".mp3");
-		jsonMap["mp3"] = beego.AppConfig.String("rooturl") + "mp3dir/" + mp3_id + ".mp3";
-		jsonMap["mp3_id"] = mp3_id;
-
-		//记录用户的提交的内容
-		go c.saveMsg(msg, tl.Text, jsonMap["mp3"]);
-
-	} else {
-		audioJson, err := res.String();
-		if err != nil {
-			fmt.Println(err);
-		}
-		//记录用户的提交的内容
-		go c.saveMsg(msg, tl.Text, "");
-
-		fmt.Println(audioJson);
-	}
-	fmt.Println(audioUrl);
 
 	c.Data["json"] = jsonMap;
-	c.ServeJSON();
-
+	c.ServeJSON()
 }
 
 // GetAll ...
@@ -338,16 +270,16 @@ func (c *TalkController) Say() {
 // @Failure 403
 // @router / [get]
 func (c *TalkController) GetAll() {
-	o := orm.NewOrm();
-	var lists []orm.ParamsList;
-	count, err := o.QueryTable("msg").ValuesList(&lists);
+	o := orm.NewOrm()
+	var lists []orm.ParamsList
+	count, err := o.QueryTable("msg").ValuesList(&lists)
 	if err != nil {
-		fmt.Println(err.Error());
+		fmt.Println(err.Error())
 	}
-	fmt.Println(lists, count);
+	fmt.Println(lists, count)
 
-	c.Data["json"] = map[string] []orm.ParamsList {"items" : lists};
-	c.ServeJSON();
+	c.Data["json"] = map[string] []orm.ParamsList {"items" : lists}
+	c.ServeJSON()
 }
 
 // Put ...
@@ -378,72 +310,128 @@ func (c * TalkController) error(err error) map[string]string {
 }
 
 func (c *TalkController) getToken() string {
-	var bdTken BdToken;
-	now := time.Now().Unix();
+	var bdTken BdToken
+	now := time.Now().Unix()
 
-	fout, err := os.Open("./token.json");
+	fout, err := os.Open("./token.json")
 	if err != nil {
 		if os.IsNotExist(err) {
-			fout,err = os.Create("./token.json");
+			fout,err = os.Create("./token.json")
 			if err != nil {
-				fmt.Println("file create fail");
+				fmt.Println("file create fail")
 			}
 		}
 	} else {
-		tokenBytes := make([]byte, 1024);
-		len, err := fout.Read(tokenBytes);
+		tokenBytes := make([]byte, 1024)
+		len, err := fout.Read(tokenBytes)
 		if err != nil {
-			fmt.Println(err.Error());
-			return "";
+			fmt.Println(err.Error())
+			return ""
 		}
 
-		//fmt.Println("len > 0", len, len > 0);
+		//fmt.Println("len > 0", len, len > 0)
 		if len > 0 {
-			//fmt.Println("%x", tokenBytes);
-			//fmt.Println("%x", tokenBytes[:len]);
-			err = json.Unmarshal(tokenBytes[:len], &bdTken);
+			//fmt.Println("%x", tokenBytes)
+			//fmt.Println("%x", tokenBytes[:len])
+			err = json.Unmarshal(tokenBytes[:len], &bdTken)
 			if err != nil {
-				fmt.Println(err.Error());
-				return "";
+				fmt.Println(err.Error())
+				return ""
 			}
 			if bdTken.Expires_in > now {
-				fmt.Println("from file");
-				return bdTken.Access_token;
+				fmt.Println("from file")
+				return bdTken.Access_token
 			}
 		}
 	}
 
 	//访问接口最新TOKEN
-	apikey := beego.AppConfig.String("BdApiKey");
-	secretkey := beego.AppConfig.String("BdSecretKey");
+	apikey := beego.AppConfig.String("BdApiKey")
+	secretkey := beego.AppConfig.String("BdSecretKey")
 	res := httplib.Get("https://openapi.baidu.com/oauth/2.0/token?grant_type=client_credentials&client_id=" + apikey + "&client_secret=" + secretkey)
 
-	jsonStr, err := res.String();
+	jsonStr, err := res.String()
 
 
 	err = json.Unmarshal([]byte(jsonStr),&bdTken)
 	if err != nil {
-		fmt.Println(err);
+		fmt.Println(err)
 	}
-	bdTken.Expires_in += now;
+	bdTken.Expires_in += now
 
-	_jsonByte, err := json.Marshal(bdTken);
+	_jsonByte, err := json.Marshal(bdTken)
 	if err != nil {
-		fmt.Println(err.Error());
-		return "";
+		fmt.Println(err.Error())
+		return ""
 	}
 
-	fout.Write(_jsonByte);
+	fout.Write(_jsonByte)
 
-	return bdTken.Access_token;
+	return bdTken.Access_token
 }
 
 func (c *TalkController) saveMsg(msg string, replyContent string, mp3url string) {
-	o := orm.NewOrm();
+	o := orm.NewOrm()
 	dbMsg := Msg{Txt : msg, ReplyContent : replyContent, Mp3Url : mp3url, CreateTime : time.Now().Unix()}
-	insertId, err := o.Insert(&dbMsg);
+	insertId, err := o.Insert(&dbMsg)
 	if err != nil {
-		fmt.Println(err.Error());
+		fmt.Println(err.Error())
 	}
-	fmt.Println("insert id === >", insertId);
+	fmt.Println("insert id === >", insertId)
+}
+
+func (c *TalkController) _say(msg string) (map[string]string, error) {
+	//接口访问
+	txUrl := beego.AppConfig.String("TLApi") + "?userid=1&key=" + beego.AppConfig.String("TLKey") + "&info=" + msg
+	req := httplib.Get(txUrl)
+	resJson, err := req.String()
+
+	if err != nil {
+		return nil, err
+	}
+
+	//fmt.Println("转换前", resJson)
+	var tl Tl
+	err = json.Unmarshal([]byte(resJson), &tl)
+	if err != nil {
+		return nil, err
+	}
+
+	jsonMap := make(map[string]string)
+	jsonMap["code"] = strconv.Itoa(tl.Code)
+	jsonMap["msg"] = tl.Text
+
+	//合成语音
+	token := c.getToken()
+	audioUrl := beego.AppConfig.String("BdText2AudioApi") + "?tex=" + tl.Text + "&lan=zh&ctp=1&cuid=123321&per=4&tok=" + token
+	res := httplib.Get(audioUrl)
+
+	resp,err := res.Response()
+	if err != nil {
+		return nil, err
+	}
+
+	if resp.Header.Get("Content-Type") == "audio/mp3" {
+		//保存文件
+		mp3_id := strconv.Itoa(rand.Int())
+		res.ToFile("./static/" + mp3_id + ".mp3")
+		jsonMap["mp3"] = beego.AppConfig.String("rooturl") + "mp3dir/" + mp3_id + ".mp3"
+		jsonMap["mp3_id"] = mp3_id
+
+		//记录用户的提交的内容
+		go c.saveMsg(msg, tl.Text, jsonMap["mp3"])
+
+	} else {
+		audioJson, err := res.String()
+		if err != nil {
+			fmt.Println(err)
+		}
+		//记录用户的提交的内容
+		go c.saveMsg(msg, tl.Text, "")
+
+		fmt.Println(audioJson)
+	}
+	fmt.Println(audioUrl)
+
+	return jsonMap, nil;
 }
