@@ -93,19 +93,19 @@ func (c *TalkController) UpVoice() {
 		fmt.Println(err)
 	}
 	var b = make([]byte, 1024 * 1024)
-	len, frerr := voiceFile.Read(b)
+	length, frerr := voiceFile.Read(b)
 	if frerr != nil {
 		fmt.Println(frerr)
 	}
-	if len > 0 {
-		fmt.Println(len)
+	if length > 0 {
+		fmt.Println(length)
 	}
 
 	//输出JSON
 	jsonMap := make(map[string]string)
 	jsonMap["token"] = token
-	jsonMap["voice"] = base64.StdEncoding.EncodeToString(b[:len])
-	jsonMap["len"] = strconv.Itoa(len)
+	jsonMap["voice"] = base64.StdEncoding.EncodeToString(b[:length])
+	jsonMap["len"] = strconv.Itoa(length)
 	c.Data["json"] = jsonMap
 
 	//发起转换成文字请求
@@ -116,7 +116,7 @@ func (c *TalkController) UpVoice() {
 	voiceJs.Cuid = "iamatest"
 	voiceJs.Token = token
 	voiceJs.Speech = jsonMap["voice"]
-	voiceJs.Len = len
+	voiceJs.Len = length
 	req := httplib.Post("http://vop.baidu.com/server_api")
 	req.Debug(true)
 	req.Header("Content-Type","application/json")
@@ -140,7 +140,7 @@ func (c *TalkController) UpVoice() {
 	}
 
 	fmt.Println(voiceResStruct);
-	if voiceResStruct.ErrNo == 0 {
+	if len(voiceResStruct.Result) > 0 {
 		jsonMap, er := c._say(voiceResStruct.Result[0])
 		if er != nil {
 			fmt.Println(er)
