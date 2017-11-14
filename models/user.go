@@ -8,7 +8,7 @@ import (
 )
 
 type User struct {
-	Id       int
+	Id       int `orm:"auto;pk"`
 	Uri string `orm:"size(16);index;"`
 	Username string
 	Openid string
