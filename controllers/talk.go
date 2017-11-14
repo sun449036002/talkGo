@@ -37,7 +37,6 @@ func (c *TalkController) URLMapping() {
 	c.Mapping("Login", c.Login)
 	c.Mapping("CheckLogin", c.CheckLogin)
 	c.Mapping("UpVoice", c.UpVoice)
-	c.Mapping("upVoiceCallback", c.UpVoiceCallback)
 }
 
 // UpVoice...
@@ -149,17 +148,6 @@ func (c *TalkController) UpVoice() {
 	c.ServeJSON()
 }
 
-// UpVoiceCallback...
-// @Title UpVoice
-// @Description up voice to server,chnage to text
-// @Param	id		path 	string	true		"The key for staticblock"
-// @Success 200 {object} models.Talk
-// @Failure 403 :id is empty
-// @router /upVoiceCallback [post]
-func (c *TalkController) UpVoiceCallback() {
-	fmt.Println(c.Ctx.Input.RequestBody)
-}
-
 
 // Login ...
 // @Title Login
@@ -196,6 +184,12 @@ func (c *TalkController) Login()  {
 
 	sessionCacheKey := lib.GetRandomString(16)
 	redis.Put(sessionCacheKey, map[string]string{"openid" : wxSession.Openid, "session_key" : wxSession.Session_key}, 300 * time.Second)
+
+	//保存用户
+	var u User;
+	u.Openid = wxSession.Openid
+	u.Username = "test"
+	u.NewUser()
 
 	c.Data["json"] = map[string]string{"session_key" : sessionCacheKey}
 	c.ServeJSON()
