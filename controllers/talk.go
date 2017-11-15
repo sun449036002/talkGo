@@ -5,6 +5,7 @@ import (
 	"github.com/astaxie/beego/orm"
 	"github.com/astaxie/beego/cache"
 	_ "github.com/astaxie/beego/cache/redis"
+	"github.com/garyburd/redigo/redis"
 	"github.com/astaxie/beego/httplib"
 	"encoding/json"
 	"encoding/base64"
@@ -141,20 +142,18 @@ func (c *TalkController) UpVoice() {
 		//}
 
 		//记录识别的PCM音频缓存
-		redis,err := cache.NewCache("redis", `{"key":"talkRedis","conn":"127.0.0.1:6379","dbNum":"0","password":""}`)
-		//fmt.Println("redis pool is:", *redis.Pool)
+		rc, err := redis.Dial("tcp", "127.0.0.1:6379")
 		if err != nil {
 			fmt.Println(err)
-			c.Data["json"] = error(err)
-			c.ServeJSON()
 		}
-		var cachedMsg Msg;
-		cachedMsg.WhatisayPcm = beego.AppConfig.String("rooturl") + "static/" + silkFileName + ".pcm";
+		defer rc.Close()
+
 		cacheKey := "user_talk_list_" + strconv.Itoa(1)
-		err = redis.Put(cacheKey, cachedMsg, 300 * time.Second)
+		v, err := rc.Do("lpush", cacheKey, beego.AppConfig.String("rooturl") + "static/" + silkFileName + ".pcm")
 		if err != nil {
 			fmt.Println(err)
 		}
+		fmt.Println("v = ", v)
 
 		//将我说的话放到返回数据中
 		jsonMap := make(map[string]string)
