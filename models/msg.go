@@ -6,7 +6,8 @@ import (
 
 type Msg struct {
 	Id int
-	Txt string `orm:"index"`
+	Whatisay string `orm:"index"`
+	WhatisayPcm string
 	ReplyContent string `orm:"type(text)"`
 	Mp3Url string
 	CreateTime int64 `orm:"auto_now_add;type(timestamp)"`

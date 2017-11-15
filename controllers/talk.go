@@ -58,8 +58,9 @@ func (c *TalkController) UpVoice() {
 	}
 
 	//创建获取命令输出管道
-	fmt.Println("/root/go/src/talkGo/static/" + h.Filename)
-	cmd := exec.Command("sh", "/root/silk-v3-decoder/converter.sh",  "/root/go/src/talkGo/static/" + h.Filename, "pcm")
+	silkFileName := "talk_" + time.Now().Format("20060102150405") + lib.GetRandomString(3)
+	fmt.Println("/root/go/src/talkGo/static/" + silkFileName)
+	cmd := exec.Command("sh", "/root/silk-v3-decoder/converter.sh",  "/root/go/src/talkGo/static/" + silkFileName, "pcm")
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
 		fmt.Printf("Error:can not obtain stdout pipe for command:%s\n", err)
@@ -86,7 +87,7 @@ func (c *TalkController) UpVoice() {
 	token := c.getToken()
 
 	//读取存储好的音频文件
-	voiceFile, err := os.Open("/root/go/src/talkGo/static/wx-file.pcm")
+	voiceFile, err := os.Open("/root/go/src/talkGo/static/" + silkFileName + ".pcm")
 	//voiceFile, err := os.Open("static/" + h.Filename)
 	if err != nil {
 		fmt.Println(err)
@@ -141,6 +142,18 @@ func (c *TalkController) UpVoice() {
 		//将我说的话放到返回数据中
 		jsonMap := make(map[string]string)
 		jsonMap["whatisay"] = voiceResStruct.Result[0]
+		jsonMap["whatisay_pcm"] = beego.AppConfig.String("rooturl") + "static/" + silkFileName + ".pcm"
+
+		redis,err := cache.NewCache("redis", `{"key":"talkRedis","conn":"127.0.0.1:6379","dbNum":"0","password":""}`)
+		//fmt.Println("redis pool is:", *redis.Pool)
+		if err != nil {
+			fmt.Println(err)
+			c.Data["json"] = error(err)
+			c.ServeJSON()
+		}
+
+		cacheKey := "user_talk_list_" + strconv.Itoa(1)
+		redis.Put(cacheKey, jsonMap, 300 * time.Second)
 
 		c.Data["json"] = jsonMap
 	}
@@ -376,8 +389,26 @@ func (c *TalkController) getToken() string {
 }
 
 func (c *TalkController) saveMsg(msg string, replyContent string, mp3url string) {
+	//获取 REIDS 中的数据
+	redis,err := cache.NewCache("redis", `{"key":"talkRedis","conn":"127.0.0.1:6379","dbNum":"0","password":""}`)
+	//fmt.Println("redis pool is:", *redis.Pool)
+	if err != nil {
+		fmt.Println(err)
+		c.Data["json"] = error(err)
+		c.ServeJSON()
+	}
+
+	cacheKey := "user_talk_list_" + strconv.Itoa(1)
+	jsonMap, err := json.Marshal(redis.Get(cacheKey))
+	if err != nil {
+		fmt.Println(err)
+	}
+	var cachedMsg Msg
+	json.Unmarshal(jsonMap, cachedMsg)
+	fmt.Println(cachedMsg)
+
 	o := orm.NewOrm()
-	dbMsg := Msg{Txt : msg, ReplyContent : replyContent, Mp3Url : mp3url, CreateTime : time.Now().Unix()}
+	dbMsg := Msg{Whatisay : msg,  WhatisayPcm : cachedMsg.WhatisayPcm, ReplyContent : replyContent, Mp3Url : mp3url, CreateTime : time.Now().Unix()}
 	insertId, err := o.Insert(&dbMsg)
 	if err != nil {
 		fmt.Println(err.Error())
