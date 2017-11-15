@@ -402,7 +402,12 @@ func (c *TalkController) saveMsg(msg string, replyContent string, mp3url string)
 	defer rc.Close()
 
 	cacheKey := "user_talk_list_" + strconv.Itoa(1)
-	whatisayPcm, err := redis.String(rc.Do("lpop", cacheKey))
+	reply, err := rc.Do("lpop", cacheKey)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	whatisayPcm, err := redis.String(reply, err)
 	if err != nil {
 		fmt.Println(err)
 	}
