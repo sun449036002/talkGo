@@ -47,18 +47,19 @@ func (c *TalkController) URLMapping() {
 // @Failure 403 :id is empty
 // @router /upVoice [post]
 func (c *TalkController) UpVoice() {
-	f,h,err := c.GetFile("file")
+	f,_,err := c.GetFile("file")
 	if err != nil {
 		log.Fatal("getfile err ", err)
 	}
 	defer f.Close()
-	ferr := c.SaveToFile("file", "static/" + h.Filename) // 保存位置在 static/upload, 没有文件夹要先创建
+
+	silkFileName := "talk_" + time.Now().Format("20060102150405") + lib.GetRandomString(3)
+	ferr := c.SaveToFile("file", "static/" + silkFileName) // 保存位置在 static/upload, 没有文件夹要先创建
 	if ferr != nil {
 		fmt.Println(ferr)
 	}
 
 	//创建获取命令输出管道
-	silkFileName := "talk_" + time.Now().Format("20060102150405") + lib.GetRandomString(3)
 	fmt.Println("/root/go/src/talkGo/static/" + silkFileName)
 	cmd := exec.Command("sh", "/root/silk-v3-decoder/converter.sh",  "/root/go/src/talkGo/static/" + silkFileName, "pcm")
 	stdout, err := cmd.StdoutPipe()
