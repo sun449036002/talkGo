@@ -149,11 +149,11 @@ func (c *TalkController) UpVoice() {
 		defer rc.Close()
 
 		cacheKey := "user_talk_list_" + strconv.Itoa(1)
-		v, err := redis.String(rc.Do("lpush", cacheKey, beego.AppConfig.String("rooturl") + "static/" + silkFileName + ".pcm"))
+		v, err := redis.Int64(rc.Do("lpush", cacheKey, beego.AppConfig.String("rooturl") + "static/" + silkFileName + ".pcm"))
 		if err != nil {
 			fmt.Println(err)
 		}
-		fmt.Println("v = ", v)
+		fmt.Println("v int64 = ", v)
 
 		//将我说的话放到返回数据中
 		jsonMap := make(map[string]string)
@@ -407,14 +407,14 @@ func (c *TalkController) saveMsg(msg string, replyContent string, mp3url string)
 		fmt.Println(err)
 	}
 
-	whatisayPcm, err := redis.Int64(reply, err)
+	whatisayPcm, err := redis.String(reply, err)
 	if err != nil {
 		fmt.Println(err)
 	}
 	fmt.Println("whatisayPcm = ", whatisayPcm)
 
 	o := orm.NewOrm()
-	dbMsg := Msg{Whatisay : msg,  WhatisayPcm : "whatisayPcm", ReplyContent : replyContent, Mp3Url : mp3url, CreateTime : time.Now().Unix()}
+	dbMsg := Msg{Whatisay : msg,  WhatisayPcm : whatisayPcm, ReplyContent : replyContent, Mp3Url : mp3url, CreateTime : time.Now().Unix()}
 	insertId, err := o.Insert(&dbMsg)
 	if err != nil {
 		fmt.Println(err.Error())
