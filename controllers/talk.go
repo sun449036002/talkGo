@@ -151,7 +151,10 @@ func (c *TalkController) UpVoice() {
 		var cachedMsg Msg;
 		cachedMsg.WhatisayPcm = beego.AppConfig.String("rooturl") + "static/" + silkFileName + ".pcm";
 		cacheKey := "user_talk_list_" + strconv.Itoa(1)
-		redis.Put(cacheKey, cachedMsg, 300 * time.Second)
+		err = redis.Put(cacheKey, cachedMsg, 300 * time.Second)
+		if err != nil {
+			fmt.Println(err)
+		}
 
 		//将我说的话放到返回数据中
 		jsonMap := make(map[string]string)
