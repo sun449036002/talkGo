@@ -407,7 +407,7 @@ func (c *TalkController) saveMsg(msg string, replyContent string, mp3url string)
 		fmt.Println(err)
 	}
 
-	whatisayPcm, err := redis.String(reply, err)
+	whatisayPcm, err := redis.int64(reply, err)
 	if err != nil {
 		fmt.Println(err)
 	}
