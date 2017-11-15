@@ -47,7 +47,6 @@ func (c *TalkController) URLMapping() {
 // @router /upVoice [post]
 func (c *TalkController) UpVoice() {
 	c.init()
-	fmt.Println(c.user)
 
 	f,_,err := c.GetFile("file")
 	if err != nil {
@@ -248,17 +247,6 @@ func (c *TalkController) CheckLogin()  {
 	c.ServeJSON()
 }
 
-// Post ...
-// @Title Create
-// @Description create Talk
-// @Param	body		body 	models.Talk	true		"body for Talk content"
-// @Success 201 {object} models.Talk
-// @Failure 403 body is empty
-// @router / [post]
-func (c *TalkController) Post() {
-
-}
-
 // GetOne ...
 // @Title GetOne
 // @Description get Talk by id
@@ -301,29 +289,6 @@ func (c *TalkController) GetAll() {
 
 	c.Data["json"] = map[string] []orm.ParamsList {"items" : lists}
 	c.ServeJSON()
-}
-
-// Put ...
-// @Title Put
-// @Description update the Talk
-// @Param	id		path 	string	true		"The id you want to update"
-// @Param	body		body 	models.Talk	true		"body for Talk content"
-// @Success 200 {object} models.Talk
-// @Failure 403 :id is not int
-// @router /:id [put]
-func (c *TalkController) Put() {
-
-}
-
-// Delete ...
-// @Title Delete
-// @Description delete the Talk
-// @Param	id		path 	string	true		"The id you want to delete"
-// @Success 200 {string} delete success!
-// @Failure 403 id is empty
-// @router /:id [delete]
-func (c *TalkController) Delete() {
-
 }
 
 func (c * TalkController) error(err error) map[string]string {
@@ -389,6 +354,7 @@ func (c *TalkController) getToken() string {
 }
 
 func (c *TalkController) saveMsg(msg string, replyContent string, mp3url string) int64 {
+	c.init()
 	//获取 REIDS 中的数据
 	//记录识别的PCM音频缓存
 	rc, err := lib.Dial()
@@ -409,7 +375,7 @@ func (c *TalkController) saveMsg(msg string, replyContent string, mp3url string)
 	}
 
 	o := orm.NewOrm()
-	dbMsg := Msg{Whatisay : msg,  WhatisayPcm : whatisayPcm, ReplyContent : replyContent, Mp3Url : mp3url, CreateTime : time.Now().Unix()}
+	dbMsg := Msg{Whatisay : msg,  UserId : c.user.Id, WhatisayPcm : whatisayPcm, ReplyContent : replyContent, Mp3Url : mp3url, CreateTime : time.Now().Unix()}
 	insertId, err := o.Insert(&dbMsg)
 	if err != nil {
 		fmt.Println(err.Error())

@@ -12,7 +12,7 @@ import (
 
 type Base struct {
 	beego.Controller
-	user interface{}
+	user User
 }
 
 func (c *Base) init()  {
@@ -39,6 +39,4 @@ func (c *Base) init()  {
 	} else {
 		fmt.Println(sessionKey, "sv 为这空", sv)
 	}
-
-	fmt.Println("base controller inited")
 }
