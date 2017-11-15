@@ -27,12 +27,8 @@ type TalkController struct {
 
 // URLMapping ...
 func (c *TalkController) URLMapping() {
-	/*c.Mapping("Post", c.Post)
-	c.Mapping("GetOne", c.GetOne)
-	c.Mapping("GetAll", c.GetAll)
-	c.Mapping("Put", c.Put)
-	c.Mapping("Delete", c.Delete)*/
 	c.Mapping("Say", c.Say)
+	c.Mapping("MsgList", c.MsgList)
 	c.Mapping("Login", c.Login)
 	c.Mapping("CheckLogin", c.CheckLogin)
 	c.Mapping("UpVoice", c.UpVoice)
@@ -277,8 +273,8 @@ func (c *TalkController) Say() {
 // @Param	offset	query	string	false	"Start position of result set. Must be an integer"
 // @Success 200 {object} models.Talk
 // @Failure 403
-// @router / [get]
-func (c *TalkController) GetAll() {
+// @router /msg_list [get]
+func (c *TalkController) MsgList() {
 	o := orm.NewOrm()
 	var lists []orm.ParamsList
 	count, err := o.QueryTable("msg").ValuesList(&lists)
