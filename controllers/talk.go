@@ -202,7 +202,7 @@ func (c *TalkController) Login()  {
 		fmt.Println(err)
 	}
 	fmt.Println(string(sessionData));
-	_, err = rc.Do("set", sessionCacheKey, string(sessionData) , 300 * time.Second)
+	_, err = rc.Do("SET", sessionCacheKey, sessionData , 300 * time.Second)
 	if err != nil {
 		fmt.Print("redis set Error: ")
 		fmt.Println(err)
