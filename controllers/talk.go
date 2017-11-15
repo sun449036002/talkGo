@@ -407,14 +407,14 @@ func (c *TalkController) saveMsg(msg string, replyContent string, mp3url string)
 		fmt.Println(err)
 	}
 
-	whatisayPcm, err := redis.int64(reply, err)
+	whatisayPcm, err := redis.Int64(reply, err)
 	if err != nil {
 		fmt.Println(err)
 	}
 	fmt.Println("whatisayPcm = ", whatisayPcm)
 
 	o := orm.NewOrm()
-	dbMsg := Msg{Whatisay : msg,  WhatisayPcm : whatisayPcm, ReplyContent : replyContent, Mp3Url : mp3url, CreateTime : time.Now().Unix()}
+	dbMsg := Msg{Whatisay : msg,  WhatisayPcm : "whatisayPcm", ReplyContent : replyContent, Mp3Url : mp3url, CreateTime : time.Now().Unix()}
 	insertId, err := o.Insert(&dbMsg)
 	if err != nil {
 		fmt.Println(err.Error())
