@@ -67,7 +67,7 @@ func (c *TalkController) UpVoice() {
 		u.GetUserByOpenid(wxs.Openid)
 		fmt.Println(u)
 	} else {
-		fmt.Println("sv 为这空", sv)
+		fmt.Println(sessionKey, "sv 为这空", sv)
 	}
 
 	f,_,err := c.GetFile("file")
