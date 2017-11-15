@@ -3,6 +3,7 @@ package lib
 import (
 	"time"
 	"math/rand"
+	"github.com/garyburd/redigo/redis"
 )
 
 //生成随机字符串
@@ -17,4 +18,8 @@ func GetRandomString(_len int) string{
 	}
 
 	return string(result)
+}
+
+func Dial() (redis.Conn, error){
+	return redis.Dial("tcp", "127.0.0.1:6379")
 }

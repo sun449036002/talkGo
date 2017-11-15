@@ -3,8 +3,6 @@ package controllers
 import (
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
-	"github.com/astaxie/beego/cache"
-	_ "github.com/astaxie/beego/cache/redis"
 	"github.com/garyburd/redigo/redis"
 	"github.com/astaxie/beego/httplib"
 	"encoding/json"
@@ -133,7 +131,7 @@ func (c *TalkController) UpVoice() {
 
 	if len(voiceResStruct.Result) > 0 {
 		//Redis 记录识别的PCM音频缓存
-		rc, err := redis.Dial("tcp", "127.0.0.1:6379")
+		rc, err := lib.Dial()
 		if err != nil {
 			fmt.Println(err)
 		}
@@ -190,7 +188,7 @@ func (c *TalkController) Login()  {
 		c.ServeJSON()
 	}
 
-	redis,err := cache.NewCache("redis", `{"key":"talkRedis","conn":"127.0.0.1:6379","dbNum":"0","password":""}`)
+	rc, err := lib.Dial()
 	if err != nil {
 		fmt.Println(err)
 		c.Data["json"] = error(err)
@@ -198,7 +196,8 @@ func (c *TalkController) Login()  {
 	}
 
 	sessionCacheKey := lib.GetRandomString(16)
-	redis.Put(sessionCacheKey, map[string]string{"openid" : wxSession.Openid, "session_key" : wxSession.Session_key}, 300 * time.Second)
+	rc.Do("set", sessionCacheKey, map[string]string{"openid" : wxSession.Openid, "session_key" : wxSession.Session_key}, 300 * time.Second)
+	fmt.Println(sessionCacheKey)
 
 	//保存用户
 	var u User;
@@ -220,18 +219,18 @@ func (c *TalkController) Login()  {
 // @router /check_login [get]
 func (c *TalkController) CheckLogin()  {
 	session_key := c.GetString("session_key")
-	redis,err := cache.NewCache("redis", `{"key":"talkRedis","conn":"127.0.0.1:6379","dbNum":"0","password":""}`)
+	rc, err := lib.Dial()
 	if err != nil {
 		fmt.Println(err)
 		c.Data["json"] = error(err)
 		c.ServeJSON()
 	}
 
-	sv, err := json.Marshal(redis.Get(session_key))
+	sv, err := redis.String(rc.Do("get", session_key));
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println("sv ==>", string(sv))
+	fmt.Println("session_key`s value is  ==>", sv)
 
 	c.Data["json"] = map[string]string{"session_key" : string(sv)}
 	c.ServeJSON()
@@ -380,7 +379,7 @@ func (c *TalkController) getToken() string {
 func (c *TalkController) saveMsg(msg string, replyContent string, mp3url string) int64 {
 	//获取 REIDS 中的数据
 	//记录识别的PCM音频缓存
-	rc, err := redis.Dial("tcp", "127.0.0.1:6379")
+	rc, err := lib.Dial()
 	if err != nil {
 		fmt.Println(err)
 	}
