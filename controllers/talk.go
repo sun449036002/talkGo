@@ -201,8 +201,7 @@ func (c *TalkController) Login()  {
 		fmt.Print("json.Marshal Error: ")
 		fmt.Println(err)
 	}
-	fmt.Println(string(sessionData));
-	_, err = rc.Do("SET", sessionCacheKey, sessionData)
+	_, err = rc.Do("SET", sessionCacheKey, string(sessionData))
 	if err != nil {
 		fmt.Print("redis set Error: ")
 		fmt.Println(err)
@@ -240,7 +239,7 @@ func (c *TalkController) CheckLogin()  {
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println("session_key`s value is  ==>", sv)
+	fmt.Println(session_key, "`s value is  ==>", sv)
 
 	c.Data["json"] = map[string]string{"session_key" : string(sv)}
 	c.ServeJSON()
