@@ -198,10 +198,13 @@ func (c *TalkController) Login()  {
 	sessionCacheKey := lib.GetRandomString(16)
 	sessionData, err := json.Marshal(map[string]string{"openid" : wxSession.Openid, "session_key" : wxSession.Session_key})
 	if err != nil {
+		fmt.Print("json.Marshal Error: ")
 		fmt.Println(err)
 	}
+	fmt.Println(string(sessionData));
 	_, err = rc.Do("set", sessionCacheKey, string(sessionData) , 300 * time.Second)
 	if err != nil {
+		fmt.Print("redis set Error: ")
 		fmt.Println(err)
 	}
 	fmt.Println(sessionCacheKey)
