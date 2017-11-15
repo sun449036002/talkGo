@@ -141,7 +141,7 @@ func (c *TalkController) UpVoice() {
 		//	fmt.Println(er)
 		//}
 
-		//记录识别的PCM音频缓存
+		//Redis 记录识别的PCM音频缓存
 		rc, err := redis.Dial("tcp", "127.0.0.1:6379")
 		if err != nil {
 			fmt.Println(err)
@@ -149,7 +149,7 @@ func (c *TalkController) UpVoice() {
 		defer rc.Close()
 
 		cacheKey := "user_talk_list_" + strconv.Itoa(1)
-		v, err := rc.Do("lpush", cacheKey, beego.AppConfig.String("rooturl") + "static/" + silkFileName + ".pcm")
+		v, err := redis.String(rc.Do("lpush", cacheKey, beego.AppConfig.String("rooturl") + "static/" + silkFileName + ".pcm"))
 		if err != nil {
 			fmt.Println(err)
 		}
@@ -394,25 +394,22 @@ func (c *TalkController) getToken() string {
 
 func (c *TalkController) saveMsg(msg string, replyContent string, mp3url string) {
 	//获取 REIDS 中的数据
-	redis,err := cache.NewCache("redis", `{"key":"talkRedis","conn":"127.0.0.1:6379","dbNum":"0","password":""}`)
-	//fmt.Println("redis pool is:", *redis.Pool)
+	//记录识别的PCM音频缓存
+	rc, err := redis.Dial("tcp", "127.0.0.1:6379")
 	if err != nil {
 		fmt.Println(err)
-		c.Data["json"] = error(err)
-		c.ServeJSON()
 	}
+	defer rc.Close()
 
 	cacheKey := "user_talk_list_" + strconv.Itoa(1)
-	jsonMap, err := json.Marshal(redis.Get(cacheKey))
+	whatisayPcm, err := redis.String(rc.Do("lpop", cacheKey))
 	if err != nil {
 		fmt.Println(err)
 	}
-	var cachedMsg Msg
-	json.Unmarshal(jsonMap, cachedMsg)
-	fmt.Println(cachedMsg)
+	fmt.Println("whatisayPcm = ", whatisayPcm)
 
 	o := orm.NewOrm()
-	dbMsg := Msg{Whatisay : msg,  WhatisayPcm : cachedMsg.WhatisayPcm, ReplyContent : replyContent, Mp3Url : mp3url, CreateTime : time.Now().Unix()}
+	dbMsg := Msg{Whatisay : msg,  WhatisayPcm : whatisayPcm, ReplyContent : replyContent, Mp3Url : mp3url, CreateTime : time.Now().Unix()}
 	insertId, err := o.Insert(&dbMsg)
 	if err != nil {
 		fmt.Println(err.Error())
