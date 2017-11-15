@@ -149,7 +149,7 @@ func (c *TalkController) UpVoice() {
 			c.ServeJSON()
 		}
 		var cachedMsg Msg;
-		cachedMsg.whatisay_pcm = beego.AppConfig.String("rooturl") + "static/" + silkFileName + ".pcm";
+		cachedMsg.WhatisayPcm = beego.AppConfig.String("rooturl") + "static/" + silkFileName + ".pcm";
 		cacheKey := "user_talk_list_" + strconv.Itoa(1)
 		redis.Put(cacheKey, cachedMsg, 300 * time.Second)
 
