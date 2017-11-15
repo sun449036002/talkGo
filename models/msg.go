@@ -6,6 +6,7 @@ import (
 
 type Msg struct {
 	Id int
+	UserId int `orm:"index"`
 	Whatisay string `orm:"index"`
 	WhatisayPcm string
 	ReplyContent string `orm:"type(text)"`

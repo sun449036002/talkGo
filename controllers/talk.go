@@ -22,7 +22,7 @@ import (
 
 // TalkController operations for Talk
 type TalkController struct {
-	beego.Controller
+	Base
 }
 
 // URLMapping ...
@@ -46,29 +46,7 @@ func (c *TalkController) URLMapping() {
 // @Failure 403 :id is empty
 // @router /upVoice [post]
 func (c *TalkController) UpVoice() {
-	//用户标识
-	sessionKey := c.GetString("sk")
-	rc, err := lib.Dial()
-	if err != nil {
-		fmt.Println(err)
-	}
-	sv, err := redis.String(rc.Do("GET", sessionKey))
-	if err != nil {
-		fmt.Println(err)
-	}
-	if sv != "" {
-		var wxs WxSession
-		err = json.Unmarshal([]byte(sv), &wxs)
-		if err != nil {
-			fmt.Println(err)
-		}
-
-		var u User
-		u.GetUserByOpenid(wxs.Openid)
-		fmt.Println(u)
-	} else {
-		fmt.Println(sessionKey, "sv 为这空", sv)
-	}
+	fmt.Println(c.user)
 
 	f,_,err := c.GetFile("file")
 	if err != nil {
