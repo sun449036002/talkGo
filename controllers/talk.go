@@ -140,11 +140,7 @@ func (c *TalkController) UpVoice() {
 		//	fmt.Println(er)
 		//}
 
-		//将我说的话放到返回数据中
-		jsonMap := make(map[string]string)
-		jsonMap["whatisay"] = voiceResStruct.Result[0]
-		jsonMap["whatisay_pcm"] = beego.AppConfig.String("rooturl") + "static/" + silkFileName + ".pcm"
-
+		//记录识别的PCM音频缓存
 		redis,err := cache.NewCache("redis", `{"key":"talkRedis","conn":"127.0.0.1:6379","dbNum":"0","password":""}`)
 		//fmt.Println("redis pool is:", *redis.Pool)
 		if err != nil {
@@ -152,9 +148,14 @@ func (c *TalkController) UpVoice() {
 			c.Data["json"] = error(err)
 			c.ServeJSON()
 		}
-
+		var cachedMsg Msg;
+		cachedMsg.whatisay_pcm = beego.AppConfig.String("rooturl") + "static/" + silkFileName + ".pcm";
 		cacheKey := "user_talk_list_" + strconv.Itoa(1)
-		redis.Put(cacheKey, jsonMap, 300 * time.Second)
+		redis.Put(cacheKey, cachedMsg, 300 * time.Second)
+
+		//将我说的话放到返回数据中
+		jsonMap := make(map[string]string)
+		jsonMap["whatisay"] = voiceResStruct.Result[0]
 
 		c.Data["json"] = jsonMap
 	}
