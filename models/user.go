@@ -47,3 +47,19 @@ func (user *User) NewUser() error  {
 	}
 	return nil;
 }
+
+func (u *User) GetUserByOpenid(openid string) error {
+	u.Openid = openid
+	o := orm.NewOrm()
+	if o == nil {
+		fmt.Println("orm init faild inside");
+		return errors.New("orm init faild");
+	}
+
+	//根据 openid 查询 ，默认是主键查询
+	err := o.Read(u, "openid")
+	if err != nil {
+		return err
+	}
+	return nil
+}

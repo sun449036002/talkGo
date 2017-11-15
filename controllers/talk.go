@@ -46,6 +46,26 @@ func (c *TalkController) URLMapping() {
 // @Failure 403 :id is empty
 // @router /upVoice [post]
 func (c *TalkController) UpVoice() {
+	//用户标识
+	sessionKey := c.GetString("sk")
+	rc, err := lib.Dial()
+	if err != nil {
+		fmt.Println(err)
+	}
+	sv, err := redis.String(rc.Do("GET", sessionKey))
+	if err != nil {
+		fmt.Println(err)
+	}
+	var wxs WxSession
+	err = json.Unmarshal([]byte(sv), wxs)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	var u User
+	u.GetUserByOpenid(wxs.Openid)
+	fmt.Println(u)
+
 	f,_,err := c.GetFile("file")
 	if err != nil {
 		log.Fatal("getfile err ", err)
