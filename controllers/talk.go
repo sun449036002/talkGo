@@ -58,7 +58,7 @@ func (c *TalkController) UpVoice() {
 	}
 	if sv != "" {
 		var wxs WxSession
-		err = json.Unmarshal([]byte(sv), wxs)
+		err = json.Unmarshal([]byte(sv), &wxs)
 		if err != nil {
 			fmt.Println(err)
 		}
