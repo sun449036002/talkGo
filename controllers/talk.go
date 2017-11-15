@@ -56,15 +56,19 @@ func (c *TalkController) UpVoice() {
 	if err != nil {
 		fmt.Println(err)
 	}
-	var wxs WxSession
-	err = json.Unmarshal([]byte(sv), wxs)
-	if err != nil {
-		fmt.Println(err)
-	}
+	if sv != "" {
+		var wxs WxSession
+		err = json.Unmarshal([]byte(sv), wxs)
+		if err != nil {
+			fmt.Println(err)
+		}
 
-	var u User
-	u.GetUserByOpenid(wxs.Openid)
-	fmt.Println(u)
+		var u User
+		u.GetUserByOpenid(wxs.Openid)
+		fmt.Println(u)
+	} else {
+		fmt.Println("sv 为这空", sv)
+	}
 
 	f,_,err := c.GetFile("file")
 	if err != nil {
