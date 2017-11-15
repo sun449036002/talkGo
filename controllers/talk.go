@@ -53,7 +53,7 @@ func (c *TalkController) UpVoice() {
 	}
 	defer f.Close()
 
-	silkFileName := "talk_" + time.Now().Format("20060102150405") + lib.GetRandomString(3)
+	silkFileName := "talk_" + time.Now().Format("20060102150405") + lib.GetRandomString(3) + ".silk"
 	ferr := c.SaveToFile("file", "static/" + silkFileName) // 保存位置在 static/upload, 没有文件夹要先创建
 	if ferr != nil {
 		fmt.Println(ferr)
