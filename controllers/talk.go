@@ -53,15 +53,15 @@ func (c *TalkController) UpVoice() {
 	}
 	defer f.Close()
 
-	silkFileName := "talk_" + time.Now().Format("20060102150405") + lib.GetRandomString(3) + ".silk"
-	ferr := c.SaveToFile("file", "static/" + silkFileName) // 保存位置在 static/upload, 没有文件夹要先创建
+	silkFileName := "talk_" + time.Now().Format("20060102150405") + lib.GetRandomString(3)
+	ferr := c.SaveToFile("file", "static/" + silkFileName  + ".silk") // 保存位置在 static/upload, 没有文件夹要先创建
 	if ferr != nil {
 		fmt.Println(ferr)
 	}
 
 	//创建获取命令输出管道
 	fmt.Println("/root/go/src/talkGo/static/" + silkFileName)
-	cmd := exec.Command("sh", "/root/silk-v3-decoder/converter.sh",  "/root/go/src/talkGo/static/" + silkFileName, "pcm")
+	cmd := exec.Command("sh", "/root/silk-v3-decoder/converter.sh",  "/root/go/src/talkGo/static/" + silkFileName  + ".silk", "pcm")
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
 		fmt.Printf("Error:can not obtain stdout pipe for command:%s\n", err)
