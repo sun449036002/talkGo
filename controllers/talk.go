@@ -196,7 +196,10 @@ func (c *TalkController) Login()  {
 	}
 
 	sessionCacheKey := lib.GetRandomString(16)
-	rc.Do("set", sessionCacheKey, map[string]string{"openid" : wxSession.Openid, "session_key" : wxSession.Session_key}, 300 * time.Second)
+	_, err = rc.Do("set", sessionCacheKey, map[string]string{"openid" : wxSession.Openid, "session_key" : wxSession.Session_key}, 300 * time.Second)
+	if err != nil {
+		fmt.Println(err)
+	}
 	fmt.Println(sessionCacheKey)
 
 	//保存用户
