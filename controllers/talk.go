@@ -46,6 +46,7 @@ func (c *TalkController) URLMapping() {
 // @Failure 403 :id is empty
 // @router /upVoice [post]
 func (c *TalkController) UpVoice() {
+	c.init()
 	fmt.Println(c.user)
 
 	f,_,err := c.GetFile("file")
