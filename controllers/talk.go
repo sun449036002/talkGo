@@ -183,8 +183,13 @@ func (c *TalkController) Say() {
 // @Failure 403
 // @router /msg_list [get]
 func (c *TalkController) MsgList() {
+	page,_ := strconv.ParseInt(c.GetString("page"), 10, 64)
+	if page == 0 {
+		page = 1
+	}
 	var m Msg;
-	c.Data["json"] = map[string][]Msg { "items" : m.GetMsgList()}
+	msgList, page, isEnd := m.GetMsgList(page)
+	c.Data["json"] = map[string] interface{} { "items" : msgList, "page" : page, "isEnd" : isEnd}
 	c.ServeJSON()
 }
 
