@@ -276,7 +276,7 @@ func (c *TalkController) Say() {
 // @router /msg_list [get]
 func (c *TalkController) MsgList() {
 	var m Msg;
-	c.Data["json"] = m.GetMsgList()
+	c.Data["json"] = map[string][]Msg { "items" : m.GetMsgList()}
 	c.ServeJSON()
 }
 
