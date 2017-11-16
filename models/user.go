@@ -7,11 +7,13 @@ import (
 	"errors"
 )
 
+
 type User struct {
 	Id       int `orm:"auto;pk"`
 	Uri string `orm:"size(16);index;"`
 	Username string
 	Openid string
+	AvatarUrl string
 	UserJson string `orm:"type(text)"`
 }
 

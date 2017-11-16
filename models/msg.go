@@ -3,7 +3,6 @@ package models
 import (
 	"fmt"
 	"github.com/astaxie/beego/orm"
-
 )
 
 type Msg struct {
@@ -24,7 +23,6 @@ func (m *Msg) GetMsgList() []Msg  {
 	o := orm.NewOrm()
 	var msgList []Msg
 	o.QueryTable("msg").Limit(10, 0).RelatedSel().All(&msgList)
-	fmt.Println(msgList)
 
 	return msgList
 }
