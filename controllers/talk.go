@@ -275,15 +275,8 @@ func (c *TalkController) Say() {
 // @Failure 403
 // @router /msg_list [get]
 func (c *TalkController) MsgList() {
-	o := orm.NewOrm()
-	var lists []orm.ParamsList
-	count, err := o.QueryTable("msg").ValuesList(&lists)
-	if err != nil {
-		fmt.Println(err.Error())
-	}
-	fmt.Println(lists, count)
-
-	c.Data["json"] = map[string] []orm.ParamsList {"items" : lists}
+	var m Msg;
+	c.Data["json"] = m.GetMsgList()
 	c.ServeJSON()
 }
 
@@ -371,7 +364,7 @@ func (c *TalkController) saveMsg(msg string, replyContent string, mp3url string)
 	}
 
 	o := orm.NewOrm()
-	dbMsg := Msg{Whatisay : msg,  UserId : c.user.Id, WhatisayPcm : whatisayPcm, ReplyContent : replyContent, Mp3Url : mp3url, CreateTime : time.Now().Unix()}
+	dbMsg := Msg{Whatisay : msg,  User : &c.user, WhatisayPcm : whatisayPcm, ReplyContent : replyContent, Mp3Url : mp3url, CreateTime : time.Now().Unix()}
 	insertId, err := o.Insert(&dbMsg)
 	if err != nil {
 		fmt.Println(err.Error())

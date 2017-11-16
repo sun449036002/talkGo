@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/astaxie/beego/orm"
 	"talkGo/lib"
-	//. "talkGo/structs"
 	"errors"
 )
 
