@@ -10,12 +10,12 @@ import (
 	"talkGo/lib"
 )
 
-type Base struct {
+type BaseController struct {
 	beego.Controller
 	user User
 }
 
-func (c *Base) init()  {
+func (c *BaseController) init()  {
 	//用户标识
 	sessionKey := c.GetString("sk")
 	rc, err := lib.Dial()

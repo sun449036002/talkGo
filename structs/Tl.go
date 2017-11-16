@@ -4,4 +4,5 @@ package structs
 type Tl struct {
 	Code int
 	Text string
+	Url string
 }

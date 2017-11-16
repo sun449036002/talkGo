@@ -34,15 +34,14 @@ func (user *User) NewUser() error  {
 
 	//根据 openid 查询 ，默认是主键查询
 	err := o.Read(u, "openid")
-	fmt.Println("read error", err)
 	if err == orm.ErrNoRows {
 		user.Uri = lib.GetRandomString(16)
 		id, err := o.Insert(user)
 		if err != nil {
-			fmt.Println("insert bad")
+			fmt.Println("user insert bad")
 			return err;
 		} else {
-			fmt.Println("insert ok", id)
+			fmt.Println("user insert ok", id)
 			return  nil;
 		}
 	}
