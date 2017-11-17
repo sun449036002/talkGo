@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/astaxie/beego/orm"
 	"talkGo/lib"
+	. "talkGo/structs"
 	"errors"
 )
 
@@ -15,6 +16,7 @@ type User struct {
 	Openid string
 	AvatarUrl string
 	UserJson string `orm:"type(text)"`
+	Userinfo Userinfo `orm:"-"` //忽略此字段
 }
 
 
