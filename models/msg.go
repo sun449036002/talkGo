@@ -36,6 +36,5 @@ func (m *Msg) GetMsgList(page int64) ([]Msg, int64, bool)  {
 	    msg.User.Userinfo = userinfo
 	}
 
-	page ++
 	return msgList, page, num < pageSize
 }
