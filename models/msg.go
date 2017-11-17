@@ -37,5 +37,5 @@ func (m *Msg) GetMsgList(page int64) ([]Msg, int64, bool)  {
 	}
 
 	page ++
-	return msgList, page, num <= 10
+	return msgList, page, num < 10
 }
