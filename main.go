@@ -12,6 +12,6 @@ func main() {
 		beego.BConfig.WebConfig.StaticDir["/swagger"] = "swagger"
 	}
 
-	beego.SetStaticPath("/mp3dir", "static");
+	beego.SetStaticPath("/mp3dir", "static")
 	beego.Run()
 }
