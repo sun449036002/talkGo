@@ -25,7 +25,7 @@ func (m *Msg) GetMsgList(page int64) ([]Msg, int64, bool)  {
 	var pageSize int64 = 10
 	o := orm.NewOrm()
 	var msgList []Msg
-	num, _ := o.QueryTable("msg").Limit(pageSize, (page - 1) * pageSize).RelatedSel().All(&msgList)
+	num, _ := o.QueryTable("msg").Limit(pageSize, (page - 1) * pageSize).RelatedSel().OrderBy("-id").All(&msgList)
 
 	for _, msg := range msgList {
 	    var userinfo Userinfo
@@ -37,5 +37,5 @@ func (m *Msg) GetMsgList(page int64) ([]Msg, int64, bool)  {
 	}
 
 	page ++
-	return msgList, page, num < 10
+	return msgList, page, num < pageSize
 }
