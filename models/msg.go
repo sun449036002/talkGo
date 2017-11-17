@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	. "talkGo/structs"
 	"github.com/astaxie/beego/orm"
+	"time"
 )
 
 type Msg struct {
@@ -27,13 +28,17 @@ func (m *Msg) GetMsgList(page int64) ([]Msg, int64, bool)  {
 	var msgList []Msg
 	num, _ := o.QueryTable("msg").Limit(pageSize, (page - 1) * pageSize).RelatedSel().OrderBy("-id").All(&msgList)
 
-	for _, msg := range msgList {
+	nowTime := time.Now().Unix()
+	for key, msg := range msgList {
 	    var userinfo Userinfo
 	    err := json.Unmarshal([]byte(msg.User.UserJson), &userinfo)
 	    if err != nil {
 	        fmt.Println(err)
 	    }
 	    msg.User.Userinfo = userinfo
+	    msg.CreateTime = nowTime - msg.CreateTime
+
+	    msgList[key] = msg
 	}
 
 	return msgList, page, num < pageSize

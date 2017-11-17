@@ -191,8 +191,6 @@ func (c *TalkController) MsgList() {
 	msgList, page, isEnd := m.GetMsgList(page)
 	c.Data["json"] = map[string] interface{} { "items" : msgList, "page" : page, "isEnd" : isEnd}
 
-	fmt.Println(page, isEnd)
-
 	c.ServeJSON()
 }
 
