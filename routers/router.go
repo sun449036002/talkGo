@@ -11,6 +11,7 @@ import (
 	"talkGo/controllers"
 
 	"github.com/astaxie/beego"
+	"talkGo/controllers/cartoon"
 )
 
 func init() {
@@ -23,6 +24,16 @@ func init() {
 		beego.NSNamespace("/talk",
 			beego.NSInclude(
 				&controllers.TalkController{},
+			),
+		),
+		beego.NSNamespace("/test",
+			beego.NSInclude(
+				&controllers.TestController{},
+			),
+		),
+		beego.NSNamespace("/cartoon",
+			beego.NSInclude(
+				&cartoon.IndexController{},
 			),
 		),
 	)
