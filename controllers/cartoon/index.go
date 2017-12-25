@@ -9,10 +9,10 @@ import (
 
 type History struct {
 	Id string
-	Img string
 	Title string
+	Time string
+	ThumbnailList []string
 	Link string
-	Desc string
 }
 
 type IndexController struct {
@@ -55,9 +55,8 @@ func (c *IndexController) Auth() {
 	}
 
 	//jsoniter.ParseString()
-	json := jsoniter.Get(bts, "showapi_res_body", "pagebean").ToString()
+	contentList := jsoniter.Get(bts, "showapi_res_body", "pagebean", "contentlist")
+	hasMorePage := jsoniter.Get(bts, "showapi_res_body", "pagebean", "hasMorePage").ToBool()
 
-	hasMorePage := jsoniter.Get(bts, "showapi_res_body", "hasMorePage").ToString()
-
-	fmt.Println(json, hasMorePage)
+	fmt.Println(contentList, hasMorePage)
 }
