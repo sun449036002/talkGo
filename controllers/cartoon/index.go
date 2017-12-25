@@ -53,6 +53,8 @@ func (c *IndexController) Auth() {
 	if(err != nil) {
 		fmt.Println(err)
 	}
+
+	fmt.Println(string(bts))
 	//jsoniter.ParseString()
 	json := jsoniter.Get(bts, "pagebean").ToString()
 
