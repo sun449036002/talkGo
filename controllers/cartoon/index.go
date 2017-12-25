@@ -56,7 +56,7 @@ func (c *IndexController) GetCategoryList()  {
 
 	cateList = append(cateList, cate1,cate2,cate3,cate4,cate5,cate6,cate7,cate8,cate9)
 
-	c.Data["list"] = cateList
+	c.Data["json"] = cateList
 	c.ServeJSON()
 }
 
