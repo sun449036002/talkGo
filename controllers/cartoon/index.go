@@ -76,6 +76,7 @@ func (c *IndexController) GetDetail() {
 	}
 
 	//jsoniter.ParseString()
+	fmt.Println(string(bts))
 	content := jsoniter.Get(bts, "showapi_res_body", "item").GetInterface()
 	json := make(map[string]interface{})
 	json["content"] = content
