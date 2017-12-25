@@ -58,5 +58,7 @@ func (c *IndexController) Auth() {
 	contentList := jsoniter.Get(bts, "showapi_res_body", "pagebean", "contentlist")
 	hasMorePage := jsoniter.Get(bts, "showapi_res_body", "pagebean", "hasMorePage").ToBool()
 
-	fmt.Println(contentList, hasMorePage)
+	fmt.Println(contentList.GetInterface())
+
+	fmt.Println(hasMorePage)
 }
