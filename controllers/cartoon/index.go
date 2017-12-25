@@ -58,8 +58,10 @@ func (c *IndexController) Auth() {
 	contentList := jsoniter.Get(bts, "showapi_res_body", "pagebean", "contentlist").GetInterface()
 	hasMorePage := jsoniter.Get(bts, "showapi_res_body", "pagebean", "hasMorePage").ToBool()
 
-	c.Data["list"] = contentList
-	c.Data["hasMorePage"] = hasMorePage
+	json := make(map[string]interface{})
+	json["list"] = contentList
+	json["hasMorePage"] = hasMorePage
+	c.Data["json"] = json
 
 	c.ServeJSON()
 }
