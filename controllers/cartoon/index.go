@@ -21,6 +21,7 @@ type IndexController struct {
 
 func (c *IndexController) URLMapping() {
 	c.Mapping("getList", c.GetList)
+	c.Mapping("GetDetail", c.GetDetail)
 }
 
 // getList 获取漫画列表...
