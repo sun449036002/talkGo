@@ -7,12 +7,9 @@ import (
 	"github.com/json-iterator/go"
 )
 
-type History struct {
-	Id string
+type Cate struct {
 	Title string
-	Time string
-	ThumbnailList []string
-	Link string
+	Value string
 }
 
 type IndexController struct {
@@ -22,6 +19,45 @@ type IndexController struct {
 func (c *IndexController) URLMapping() {
 	c.Mapping("getList", c.GetList)
 	c.Mapping("GetDetail", c.GetDetail)
+	c.Mapping("GetCategoryList", c.GetCategoryList)
+}
+
+// GetCategoryList 获取漫画列表...
+// @router /cate-list [get]
+func (c *IndexController) GetCategoryList()  {
+	var cateList []Cate
+	var cate1,cate2,cate3,cate4,cate5,cate6,cate7,cate8,cate9 Cate
+	cate1.Title = "恐怖漫画"
+	cate1.Value = "/category/weimanhua/kbmh"
+
+	cate2.Title = "故事漫画"
+	cate2.Value = "/category/weimanhua/gushimanhua"
+
+	cate3.Title = "段子手"
+	cate3.Value = "/category/duanzishou"
+
+	cate4.Title = "奇趣"
+	cate4.Value = "/category/qiqu"
+
+	cate5.Title = "搞笑"
+	cate5.Value = "/category/gaoxiao"
+
+	cate6.Title = "插画"
+	cate6.Value = "/category/chahua"
+
+	cate7.Title = "新奇"
+	cate7.Value = "/category/xinqi"
+
+	cate8.Title = "萌宠"
+	cate8.Value = "/category/mengchong"
+
+	cate9.Title = "电影"
+	cate9.Value = "/category/dianying"
+
+	cateList = append(cateList, cate1,cate2,cate3,cate4,cate5,cate6,cate7,cate8,cate9)
+
+	c.Data["list"] = cateList
+	c.ServeJSON()
 }
 
 // getList 获取漫画列表...
@@ -52,7 +88,6 @@ func (c *IndexController) GetList() {
 		fmt.Println(err)
 	}
 
-	//jsoniter.ParseString()
 	contentList := jsoniter.Get(bts, "showapi_res_body", "pagebean", "contentlist").GetInterface()
 	hasMorePage := jsoniter.Get(bts, "showapi_res_body", "pagebean", "hasMorePage").ToBool()
 
@@ -75,8 +110,6 @@ func (c *IndexController) GetDetail() {
 		fmt.Println(err)
 	}
 
-	//jsoniter.ParseString()
-	fmt.Println(string(bts))
 	content := jsoniter.Get(bts, "showapi_res_body", "item").GetInterface()
 	json := make(map[string]interface{})
 	json["content"] = content
