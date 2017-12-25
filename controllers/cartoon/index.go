@@ -68,7 +68,7 @@ func (c *IndexController) GetList() {
 // @router /detail [get]
 func (c *IndexController) GetDetail() {
 	id := c.GetString("id")
-	res := httplib.Get("http://route.showapi.com/958-1?showapi_appid=" + beego.AppConfig.String("YiYuanAppId") + "&showapi_sign=" + beego.AppConfig.String("YiYuanSecretKey") + "&id=" + id)
+	res := httplib.Get("http://route.showapi.com/958-2?showapi_appid=" + beego.AppConfig.String("YiYuanAppId") + "&showapi_sign=" + beego.AppConfig.String("YiYuanSecretKey") + "&id=" + id)
 
 	bts, err := res.Bytes()
 	if(err != nil) {
