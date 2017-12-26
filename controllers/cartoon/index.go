@@ -42,17 +42,17 @@ func (c *IndexController) GetCategoryList()  {
 	cate5.Title = "搞笑"
 	cate5.Value = "/category/gaoxiao"
 
-	cate6.Title = "插画"
-	cate6.Value = "/category/chahua"
-
-	cate7.Title = "新奇"
-	cate7.Value = "/category/xinqi"
-
-	cate8.Title = "萌宠"
-	cate8.Value = "/category/mengchong"
-
-	cate9.Title = "电影"
-	cate9.Value = "/category/dianying"
+	//cate6.Title = "插画"
+	//cate6.Value = "/category/chahua"
+	//
+	//cate7.Title = "新奇"
+	//cate7.Value = "/category/xinqi"
+	//
+	//cate8.Title = "萌宠"
+	//cate8.Value = "/category/mengchong"
+	//
+	//cate9.Title = "电影"
+	//cate9.Value = "/category/dianying"
 
 	cateList = append(cateList, cate1,cate2,cate3,cate4,cate5,cate6,cate7,cate8,cate9)
 
