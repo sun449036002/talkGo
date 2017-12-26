@@ -26,7 +26,7 @@ func (c *IndexController) URLMapping() {
 // @router /cate-list [get]
 func (c *IndexController) GetCategoryList()  {
 	var cateList []Cate
-	var cate1,cate2,cate3,cate4,cate5,cate6,cate7,cate8,cate9 Cate
+	var cate1,cate2,cate3,cate4,cate5 Cate
 	cate1.Title = "恐怖漫画"
 	cate1.Value = "/category/weimanhua/kbmh"
 
@@ -54,7 +54,7 @@ func (c *IndexController) GetCategoryList()  {
 	//cate9.Title = "电影"
 	//cate9.Value = "/category/dianying"
 
-	cateList = append(cateList, cate1,cate2,cate3,cate4,cate5,cate6,cate7,cate8,cate9)
+	cateList = append(cateList, cate1,cate2,cate3,cate4,cate5)
 
 	c.Data["json"] = cateList
 	c.ServeJSON()
