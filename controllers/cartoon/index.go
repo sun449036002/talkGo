@@ -80,7 +80,8 @@ func (c *IndexController) GetList() {
 	type=/category/chahua 插画
 	 */
 	page := c.GetString("page", "1")
-	res := httplib.Get("http://route.showapi.com/958-1?type=/category/weimanhua/kbmh&showapi_appid=" + beego.AppConfig.String("YiYuanAppId") + "&showapi_sign=" + beego.AppConfig.String("YiYuanSecretKey") + "&page=" + page)
+	cate := c.GetString("cate", "/category/weimanhua/kbmh")
+	res := httplib.Get("http://route.showapi.com/958-1?type=" + cate + "&showapi_appid=" + beego.AppConfig.String("YiYuanAppId") + "&showapi_sign=" + beego.AppConfig.String("YiYuanSecretKey") + "&page=" + page)
 	//fmt.Println(res.String())
 
 	bts, err := res.Bytes()
