@@ -1,6 +1,9 @@
 package controllers
 
-import "talkGo/models"
+import (
+	"talkGo/models"
+	"strconv"
+)
 
 type RoomController struct {
 	BaseController
@@ -41,7 +44,7 @@ func (c *RoomController) Create() {
 
 	jsonMap["code"] = "0"
 	jsonMap["msg"] = "success"
-	jsonMap["roomId"] = roomId
+	jsonMap["roomId"] = "r_" + strconv.Itoa(int(roomId))
 	c.Data["json"] = jsonMap
 	c.ServeJSON()
 }
