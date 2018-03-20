@@ -19,7 +19,7 @@ func (c *RoomController) URLMapping() {
 // @Failure 403 :id is empty
 // @router /Create [get]
 func (c *RoomController) Create() {
-	c.init()
+	//c.init()
 	jsonMap := make(map[string]string)
 
 	name := c.GetString("name")
