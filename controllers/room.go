@@ -9,7 +9,7 @@ type RoomController struct {
 // URLMapping ...
 func (c *RoomController) URLMapping() {
 	c.Mapping("Create", c.Create)
-	c.Mapping("GetList", c.Create)
+	c.Mapping("GetList", c.GetList)
 }
 
 
