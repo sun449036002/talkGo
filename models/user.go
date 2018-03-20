@@ -30,8 +30,8 @@ func (user *User) NewUser() error  {
 	u.Openid = user.Openid
 	o := orm.NewOrm()
 	if o == nil {
-		fmt.Println("orm init faild inside");
-		return errors.New("orm init faild");
+		fmt.Println("orm init faild inside")
+		return errors.New("orm init faild")
 	}
 
 	//根据 openid 查询 ，默认是主键查询
@@ -41,21 +41,21 @@ func (user *User) NewUser() error  {
 		id, err := o.Insert(user)
 		if err != nil {
 			fmt.Println("user insert bad")
-			return err;
+			return err
 		} else {
 			fmt.Println("user insert ok", id)
-			return  nil;
+			return  nil
 		}
 	}
-	return nil;
+	return nil
 }
 
 func (u *User) GetUserByOpenid(openid string) error {
 	u.Openid = openid
 	o := orm.NewOrm()
 	if o == nil {
-		fmt.Println("orm init faild inside");
-		return errors.New("orm init faild");
+		fmt.Println("orm init faild inside")
+		return errors.New("orm init faild")
 	}
 
 	//根据 openid 查询 ，默认是主键查询

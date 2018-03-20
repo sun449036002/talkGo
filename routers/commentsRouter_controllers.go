@@ -7,62 +7,6 @@ import (
 
 func init() {
 
-	beego.GlobalControllerRouter["talkGo/controllers:ObjectController"] = append(beego.GlobalControllerRouter["talkGo/controllers:ObjectController"],
-		beego.ControllerComments{
-			Method: "Post",
-			Router: `/`,
-			AllowHTTPMethods: []string{"post"},
-			MethodParams: param.Make(),
-			Params: nil})
-
-	beego.GlobalControllerRouter["talkGo/controllers:ObjectController"] = append(beego.GlobalControllerRouter["talkGo/controllers:ObjectController"],
-		beego.ControllerComments{
-			Method: "GetAll",
-			Router: `/`,
-			AllowHTTPMethods: []string{"get"},
-			MethodParams: param.Make(),
-			Params: nil})
-
-	beego.GlobalControllerRouter["talkGo/controllers:ObjectController"] = append(beego.GlobalControllerRouter["talkGo/controllers:ObjectController"],
-		beego.ControllerComments{
-			Method: "Get",
-			Router: `/:objectId`,
-			AllowHTTPMethods: []string{"get"},
-			MethodParams: param.Make(),
-			Params: nil})
-
-	beego.GlobalControllerRouter["talkGo/controllers:ObjectController"] = append(beego.GlobalControllerRouter["talkGo/controllers:ObjectController"],
-		beego.ControllerComments{
-			Method: "Put",
-			Router: `/:objectId`,
-			AllowHTTPMethods: []string{"put"},
-			MethodParams: param.Make(),
-			Params: nil})
-
-	beego.GlobalControllerRouter["talkGo/controllers:ObjectController"] = append(beego.GlobalControllerRouter["talkGo/controllers:ObjectController"],
-		beego.ControllerComments{
-			Method: "Delete",
-			Router: `/:objectId`,
-			AllowHTTPMethods: []string{"delete"},
-			MethodParams: param.Make(),
-			Params: nil})
-
-	beego.GlobalControllerRouter["talkGo/controllers:TalkController"] = append(beego.GlobalControllerRouter["talkGo/controllers:TalkController"],
-		beego.ControllerComments{
-			Method: "Post",
-			Router: `/`,
-			AllowHTTPMethods: []string{"post"},
-			MethodParams: param.Make(),
-			Params: nil})
-
-	beego.GlobalControllerRouter["talkGo/controllers:TalkController"] = append(beego.GlobalControllerRouter["talkGo/controllers:TalkController"],
-		beego.ControllerComments{
-			Method: "GetAll",
-			Router: `/`,
-			AllowHTTPMethods: []string{"get"},
-			MethodParams: param.Make(),
-			Params: nil})
-
 	beego.GlobalControllerRouter["talkGo/controllers:TalkController"] = append(beego.GlobalControllerRouter["talkGo/controllers:TalkController"],
 		beego.ControllerComments{
 			Method: "Say",
@@ -73,65 +17,25 @@ func init() {
 
 	beego.GlobalControllerRouter["talkGo/controllers:TalkController"] = append(beego.GlobalControllerRouter["talkGo/controllers:TalkController"],
 		beego.ControllerComments{
-			Method: "Put",
-			Router: `/:id`,
-			AllowHTTPMethods: []string{"put"},
-			MethodParams: param.Make(),
-			Params: nil})
-
-	beego.GlobalControllerRouter["talkGo/controllers:TalkController"] = append(beego.GlobalControllerRouter["talkGo/controllers:TalkController"],
-		beego.ControllerComments{
-			Method: "Delete",
-			Router: `/:id`,
-			AllowHTTPMethods: []string{"delete"},
-			MethodParams: param.Make(),
-			Params: nil})
-
-	beego.GlobalControllerRouter["talkGo/controllers:TalkController"] = append(beego.GlobalControllerRouter["talkGo/controllers:TalkController"],
-		beego.ControllerComments{
-			Method: "Login",
-			Router: `/login`,
+			Method: "MsgList",
+			Router: `/msg_list`,
 			AllowHTTPMethods: []string{"get"},
 			MethodParams: param.Make(),
 			Params: nil})
 
-	beego.GlobalControllerRouter["talkGo/controllers:UserController"] = append(beego.GlobalControllerRouter["talkGo/controllers:UserController"],
+	beego.GlobalControllerRouter["talkGo/controllers:TalkController"] = append(beego.GlobalControllerRouter["talkGo/controllers:TalkController"],
 		beego.ControllerComments{
-			Method: "Post",
-			Router: `/`,
+			Method: "UpVoice",
+			Router: `/upVoice`,
 			AllowHTTPMethods: []string{"post"},
 			MethodParams: param.Make(),
 			Params: nil})
 
 	beego.GlobalControllerRouter["talkGo/controllers:UserController"] = append(beego.GlobalControllerRouter["talkGo/controllers:UserController"],
 		beego.ControllerComments{
-			Method: "GetAll",
-			Router: `/`,
+			Method: "CheckLogin",
+			Router: `/check_login`,
 			AllowHTTPMethods: []string{"get"},
-			MethodParams: param.Make(),
-			Params: nil})
-
-	beego.GlobalControllerRouter["talkGo/controllers:UserController"] = append(beego.GlobalControllerRouter["talkGo/controllers:UserController"],
-		beego.ControllerComments{
-			Method: "Get",
-			Router: `/:uid`,
-			AllowHTTPMethods: []string{"get"},
-			MethodParams: param.Make(),
-			Params: nil})
-
-	beego.GlobalControllerRouter["talkGo/controllers:UserController"] = append(beego.GlobalControllerRouter["talkGo/controllers:UserController"],
-		beego.ControllerComments{
-			Method: "Put",
-			Router: `/:uid`,
-			AllowHTTPMethods: []string{"put"},
-			MethodParams: param.Make(),
-			Params: nil})
-
-	beego.GlobalControllerRouter["talkGo/controllers:UserController"] = append(beego.GlobalControllerRouter["talkGo/controllers:UserController"],
-		beego.ControllerComments{
-			Method: "Delete",
-			Router: `/:uid`,
-			AllowHTTPMethods: []string{"delete"},
 			MethodParams: param.Make(),
 			Params: nil})
 
@@ -139,14 +43,6 @@ func init() {
 		beego.ControllerComments{
 			Method: "Login",
 			Router: `/login`,
-			AllowHTTPMethods: []string{"get"},
-			MethodParams: param.Make(),
-			Params: nil})
-
-	beego.GlobalControllerRouter["talkGo/controllers:UserController"] = append(beego.GlobalControllerRouter["talkGo/controllers:UserController"],
-		beego.ControllerComments{
-			Method: "Logout",
-			Router: `/logout`,
 			AllowHTTPMethods: []string{"get"},
 			MethodParams: param.Make(),
 			Params: nil})

@@ -120,9 +120,9 @@ func (c *TalkController) UpVoice() {
 	if err != nil {
 		fmt.Println(err)
 	}
-	//fmt.Println(jsonStr);
+	//fmt.Println(jsonStr)
 	var voiceResStruct VoiceResStruct
-	err = json.Unmarshal([]byte(jsonStr), &voiceResStruct);
+	err = json.Unmarshal([]byte(jsonStr), &voiceResStruct)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -163,10 +163,10 @@ func (c *TalkController) Say() {
 
 	jsonMap,err :=c._say(msg)
 	if err != nil {
-		fmt.Println(err);
+		fmt.Println(err)
 	}
 
-	c.Data["json"] = jsonMap;
+	c.Data["json"] = jsonMap
 	c.ServeJSON()
 }
 
@@ -187,7 +187,7 @@ func (c *TalkController) MsgList() {
 	if page == 0 {
 		page = 1
 	}
-	var m Msg;
+	var m Msg
 	msgList, page, isEnd := m.GetMsgList(page)
 	c.Data["json"] = map[string] interface{} { "items" : msgList, "page" : page, "isEnd" : isEnd}
 
@@ -339,5 +339,5 @@ func (c *TalkController) _say(msg string) (map[string]string, error) {
 		//记录用户的提交的内容
 		go c.saveMsg(msg, tl.Text, "")
 	}
-	return jsonMap, nil;
+	return jsonMap, nil
 }

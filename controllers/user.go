@@ -75,7 +75,7 @@ func (c *UserController) Login()  {
 	fmt.Println(sessionCacheKey)
 
 	//保存用户
-	var u User;
+	var u User
 	u.Openid = wxSession.Openid
 	u.Username = userinfo.NickName
 	u.AvatarUrl = userinfo.AvatarUrl
@@ -102,7 +102,7 @@ func (c *UserController) CheckLogin()  {
 		c.ServeJSON()
 	}
 
-	sv, err := redis.String(rc.Do("get", session_key));
+	sv, err := redis.String(rc.Do("get", session_key))
 	if err != nil {
 		fmt.Println(err)
 	}
