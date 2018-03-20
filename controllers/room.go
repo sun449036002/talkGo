@@ -12,8 +12,12 @@ func (c *RoomController) URLMapping() {
 	c.Mapping("GetList", c.GetList)
 }
 
-
-//创建房间
+// 创建房间...
+// @Title Create
+// @Description up voice to server,chnage to text
+// @Success 200 {object} models.Talk
+// @Failure 403 :id is empty
+// @router /Create [post]
 func (c *RoomController) Create() {
 	jsonMap := make(map[string]string)
 
@@ -33,7 +37,12 @@ func (c *RoomController) Create() {
 	c.ServeJSON()
 }
 
-//房间列表
+// 房间列表...
+// @Title GetList
+// @Description up voice to server,chnage to text
+// @Success 200 {object} models.Talk
+// @Failure 403 :id is empty
+// @router /get-list [get]
 func (c *RoomController) GetList() {
 	jsonMap := make(map[string]interface{})
 
