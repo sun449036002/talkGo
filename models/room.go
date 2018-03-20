@@ -3,10 +3,12 @@ package models
 import (
 	"fmt"
 	"github.com/astaxie/beego/orm"
+	"strconv"
 )
 
 type Room struct {
 	Id       int `orm:"auto;pk"`
+	RoomId string `orm:"ignore"`
 	UserId  int
 	Name string
 	Status int
@@ -24,6 +26,10 @@ func (m *Room) GetList(page int64) ([]Room, int64, bool)  {
 	o := orm.NewOrm()
 	var roomList []Room
 	num, _ := o.QueryTable("room").Limit(pageSize, (page - 1) * pageSize).RelatedSel().OrderBy("-id").All(&roomList)
+
+	for k,room := range roomList {
+		roomList[k].RoomId = "r_"  + strconv.Itoa(room.Id)
+	}
 
 	return roomList, page, num < pageSize
 }
