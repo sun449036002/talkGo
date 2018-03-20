@@ -8,7 +8,6 @@ import (
 
 type Room struct {
 	Id       int `orm:"auto;pk"`
-	RoomId string `orm:"ignore"`
 	UserId  int
 	Name string
 	Status int
@@ -21,17 +20,19 @@ func init() {
 }
 
 //房间列表
-func (m *Room) GetList(page int64) ([]Room, int64, bool)  {
+func (m *Room) GetList(page int64) ([]map[string]interface{}, int64, bool)  {
 	var pageSize int64 = 10
 	o := orm.NewOrm()
 	var roomList []Room
 	num, _ := o.QueryTable("room").Limit(pageSize, (page - 1) * pageSize).RelatedSel().OrderBy("-id").All(&roomList)
 
+	list := make([]map[string]interface{}, 0)
 	for k,room := range roomList {
-		roomList[k].RoomId = "r_"  + strconv.Itoa(room.Id)
+		list[k]["roomId"] = "r_"  + strconv.Itoa(room.Id)
+		list[k]["roomName"] = room.Name
 	}
 
-	return roomList, page, num < pageSize
+	return list, page, num < pageSize
 }
 
 //创建房间
