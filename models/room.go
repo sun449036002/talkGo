@@ -26,7 +26,7 @@ func (m *Room) GetList(page int64) ([]map[string]interface{}, int64, bool)  {
 	var roomList []Room
 	num, _ := o.QueryTable("room").Limit(pageSize, (page - 1) * pageSize).RelatedSel().OrderBy("-id").All(&roomList)
 
-	list := make([]map[string]interface{}, 0)
+	list := make([]map[string]interface{}, len(roomList))
 	for k,room := range roomList {
 		list[k]["roomId"] = "r_"  + strconv.Itoa(room.Id)
 		list[k]["roomName"] = room.Name
