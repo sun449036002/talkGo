@@ -29,7 +29,7 @@ func (m *Room) GetList(page int64) ([]map[string]interface{}, int64, bool)  {
 	list := make([]map[string]interface{}, len(roomList))
 	for k,room := range roomList {
 		tplMap := make(map[string]interface{})
-		tplMap["roomId"] = "r_"  + strconv.Itoa(room.Id)
+		tplMap["roomId"] = "room_"  + strconv.Itoa(room.Id)
 		tplMap["roomName"] = room.Name
 		list[k] = tplMap
 	}

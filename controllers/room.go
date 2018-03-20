@@ -44,7 +44,7 @@ func (c *RoomController) Create() {
 
 	jsonMap["code"] = "0"
 	jsonMap["msg"] = "success"
-	jsonMap["roomId"] = "r_" + strconv.Itoa(int(roomId))
+	jsonMap["roomId"] = "room_" + strconv.Itoa(int(roomId))
 	c.Data["json"] = jsonMap
 	c.ServeJSON()
 }
