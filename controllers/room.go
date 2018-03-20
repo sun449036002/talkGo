@@ -17,8 +17,9 @@ func (c *RoomController) URLMapping() {
 // @Description up voice to server,chnage to text
 // @Success 200 {object} models.Talk
 // @Failure 403 :id is empty
-// @router /Create [post]
+// @router /Create [get]
 func (c *RoomController) Create() {
+	c.init()
 	jsonMap := make(map[string]string)
 
 	name := c.GetString("name")
@@ -29,7 +30,8 @@ func (c *RoomController) Create() {
 		c.ServeJSON()
 	}
 
-
+	roomModel := new(models.Room)
+	roomModel.Create(1, name)
 
 	jsonMap["code"] = "0"
 	jsonMap["msg"] = "success"
