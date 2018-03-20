@@ -31,6 +31,11 @@ func init() {
 				&cartoon.IndexController{},
 			),
 		),
+		beego.NSNamespace("/room",
+			beego.NSInclude(
+				&controllers.RoomController{},
+			),
+		),
 	)
 	beego.AddNamespace(ns)
 }
