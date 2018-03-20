@@ -20,7 +20,7 @@ func (c *RoomController) URLMapping() {
 // @router /Create [get]
 func (c *RoomController) Create() {
 	//c.init()
-	jsonMap := make(map[string]string)
+	jsonMap := make(map[string]interface{})
 
 	name := c.GetString("name")
 	if name == "" {
@@ -31,10 +31,17 @@ func (c *RoomController) Create() {
 	}
 
 	roomModel := new(models.Room)
-	roomModel.Create(1, name)
+	roomId, err := roomModel.Create(1, name)
+	if err != nil {
+		jsonMap["code"] = "100"
+		jsonMap["msg"] = "room create failed"
+		c.Data["json"] = jsonMap
+		c.ServeJSON()
+	}
 
 	jsonMap["code"] = "0"
 	jsonMap["msg"] = "success"
+	jsonMap["roomId"] = roomId
 	c.Data["json"] = jsonMap
 	c.ServeJSON()
 }
