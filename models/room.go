@@ -24,7 +24,7 @@ func (m *Room) GetList(page int64) ([]map[string]interface{}, int64, bool)  {
 	var pageSize int64 = 10
 	o := orm.NewOrm()
 	var roomList []Room
-	num, _ := o.QueryTable("room")/*.Filter("status", 1)*/.Limit(pageSize, (page - 1) * pageSize).RelatedSel().OrderBy("-id").All(&roomList)
+	num, _ := o.QueryTable("room").Filter("status", 1).Limit(pageSize, (page - 1) * pageSize).RelatedSel().OrderBy("-id").All(&roomList)
 
 	list := make([]map[string]interface{}, len(roomList))
 	for k,room := range roomList {
