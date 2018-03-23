@@ -32,6 +32,7 @@ func (c *RoomController) Create() {
 		jsonMap["msg"] = "empty name"
 		c.Data["json"] = jsonMap
 		c.ServeJSON()
+		return
 	}
 
 	roomModel := new(models.Room)
@@ -41,6 +42,7 @@ func (c *RoomController) Create() {
 		jsonMap["msg"] = "room create failed"
 		c.Data["json"] = jsonMap
 		c.ServeJSON()
+		return
 	}
 
 	jsonMap["code"] = "0"
