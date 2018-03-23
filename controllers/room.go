@@ -84,6 +84,8 @@ func (c *RoomController) GetList() {
 // @Failure 403 :id is empty
 // @router /i-exit [get]
 func (c *RoomController) IExit() {
+	c.init()
+	
 	jsonMap := make(map[string]interface{})
 
 	roomId, _ := c.GetInt("roomId", 0)
