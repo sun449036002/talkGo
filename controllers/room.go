@@ -13,6 +13,7 @@ type RoomController struct {
 func (c *RoomController) URLMapping() {
 	c.Mapping("Create", c.Create)
 	c.Mapping("GetList", c.GetList)
+	c.Mapping("IExit", c.IExit)
 }
 
 // 创建房间...
@@ -34,7 +35,7 @@ func (c *RoomController) Create() {
 	}
 
 	roomModel := new(models.Room)
-	roomId, err := roomModel.Create(1, name)
+	roomId, err := roomModel.Create(c.user.Id, name)
 	if err != nil {
 		jsonMap["code"] = "100"
 		jsonMap["msg"] = "room create failed"
@@ -58,14 +59,43 @@ func (c *RoomController) Create() {
 func (c *RoomController) GetList() {
 	jsonMap := make(map[string]interface{})
 
+	page, _ := c.GetInt64("page", 1)
+
 	roomModel := new(models.Room)
-	roomList, page, isEnd := roomModel.GetList(1)
+	roomList, nextPage, isEnd := roomModel.GetList(page)
 
 	jsonMap["code"] = "0"
 	jsonMap["msg"] = "success"
 	jsonMap["items"] = roomList
-	jsonMap["page"] = page
+	jsonMap["page"] = nextPage
 	jsonMap["isEnd"] = isEnd
+	jsonMap["userId"] = c.user.Id
+	c.Data["json"] = jsonMap
+	c.ServeJSON()
+}
+
+
+// 房主离开...
+// @Title IExit
+// @Description up voice to server,chnage to text
+// @Success 200 {object} models.Talk
+// @Failure 403 :id is empty
+// @router /i-exit [get]
+func (c *RoomController) IExit() {
+	jsonMap := make(map[string]interface{})
+
+	roomId, _ := c.GetInt("roomId", 0)
+
+	roomModel := new(models.Room)
+	ok,_ := roomModel.Exit(c.user.Id, roomId)
+
+	jsonMap["code"] = 0
+	jsonMap["msg"] = "success"
+	if !ok {
+		jsonMap["code"] = 0
+		jsonMap["msg"] = "exit room fail"
+	}
+
 	c.Data["json"] = jsonMap
 	c.ServeJSON()
 }

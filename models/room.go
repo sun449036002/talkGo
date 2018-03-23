@@ -34,6 +34,7 @@ func (m *Room) GetList(page int64) ([]map[string]interface{}, int64, bool)  {
 		list[k] = tplMap
 	}
 
+	page++
 	return list, page, num < pageSize
 }
 
@@ -50,4 +51,20 @@ func (m *Room) Create(userId int, name string) (int64, error) {
 	fmt.Println("the new room id is :", id)
 
 	return id, nil
+}
+
+//更新房间状态
+func (m *Room) Exit(userId int, roomId int) (bool, error) {
+	o := orm.NewOrm()
+	m.Id = roomId
+	m.UserId = userId
+	m.Status = 0
+	num, err := o.Update(&m, "status")
+	if err != nil {
+		return false, err
+	}
+
+	fmt.Println("the room`s status is :", m.Status, ",update rows = ", num)
+
+	return true, nil
 }
