@@ -61,7 +61,7 @@ func (m *Room) Exit(userId int, roomId int) (bool, error) {
 	m.Id = roomId
 	m.UserId = userId
 	m.Status = 0
-	num, err := o.Update(&m, "status")
+	num, err := o.Update(m, "status")
 	if err != nil {
 		return false, err
 	}
