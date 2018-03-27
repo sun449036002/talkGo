@@ -9,6 +9,7 @@ import (
 	. "talkGo/models"
 	. "talkGo/structs"
 	"talkGo/lib"
+	"github.com/json-iterator/go"
 )
 
 type UserController struct {
@@ -108,6 +109,24 @@ func (c *UserController) CheckLogin()  {
 	}
 	fmt.Println(session_key, "`s value is  ==>", sv)
 
-	c.Data["json"] = map[string]string{"session_key" : string(sv)}
+	if sv != "" {
+		wxSession := &WxSession{}
+		err := jsoniter.UnmarshalFromString(sv, &wxSession)
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		var u User
+		u.GetUserByOpenid(wxSession.Openid)
+
+		userJson, _ := jsoniter.MarshalToString(u)
+		_, err = rc.Do("SET", "userinfo_" + session_key, userJson)
+		if err != nil {
+			fmt.Print("redis set Error: ")
+			fmt.Println(err)
+		}
+	}
+
+	c.Data["json"] = map[string]string{"session_key" : sv}
 	c.ServeJSON()
 }

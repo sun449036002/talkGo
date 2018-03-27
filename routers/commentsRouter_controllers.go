@@ -7,6 +7,30 @@ import (
 
 func init() {
 
+	beego.GlobalControllerRouter["talkGo/controllers:RoomController"] = append(beego.GlobalControllerRouter["talkGo/controllers:RoomController"],
+		beego.ControllerComments{
+			Method: "Create",
+			Router: `/Create`,
+			AllowHTTPMethods: []string{"get"},
+			MethodParams: param.Make(),
+			Params: nil})
+
+	beego.GlobalControllerRouter["talkGo/controllers:RoomController"] = append(beego.GlobalControllerRouter["talkGo/controllers:RoomController"],
+		beego.ControllerComments{
+			Method: "GetList",
+			Router: `/get-list`,
+			AllowHTTPMethods: []string{"get"},
+			MethodParams: param.Make(),
+			Params: nil})
+
+	beego.GlobalControllerRouter["talkGo/controllers:RoomController"] = append(beego.GlobalControllerRouter["talkGo/controllers:RoomController"],
+		beego.ControllerComments{
+			Method: "IExit",
+			Router: `/i-exit`,
+			AllowHTTPMethods: []string{"get"},
+			MethodParams: param.Make(),
+			Params: nil})
+
 	beego.GlobalControllerRouter["talkGo/controllers:TalkController"] = append(beego.GlobalControllerRouter["talkGo/controllers:TalkController"],
 		beego.ControllerComments{
 			Method: "Say",
