@@ -43,6 +43,7 @@ func (c *UserController) Login()  {
 	url := beego.AppConfig.String("wxApiUrl") + "sns/jscode2session?appid=" + beego.AppConfig.String("wxSmallAppId") + "&secret=" + beego.AppConfig.String("wxSmallSecret") + "&js_code=" + code + "&grant_type=authorization_code"
 	req := httplib.Get(url)
 	sessionJson,err:= req.String()
+	fmt.Println("sessionJson =====> ", sessionJson)
 	if err != nil {
 		c.Data["json"] = error(err)
 		c.ServeJSON()
