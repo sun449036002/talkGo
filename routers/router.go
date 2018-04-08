@@ -36,6 +36,11 @@ func init() {
 				&controllers.RoomController{},
 			),
 		),
+		beego.NSNamespace("/notify",
+			beego.NSInclude(
+				&controllers.NotifyController{},
+			),
+		),
 	)
 	beego.AddNamespace(ns)
 }
