@@ -32,7 +32,7 @@ func (m *Room) GetList(page int64) ([]map[string]interface{}, int64, bool)  {
 		tplMap := make(map[string]interface{})
 		tplMap["roomId"] = "room_"  + strconv.Itoa(room.Id)
 		tplMap["roomName"] = room.Name
-		tplMap["roomCover"] = beego.AppConfig.String("rooturl") + "mp3dir/hlsCover/" + room.Name + "_cover.png"
+		tplMap["roomCover"] = beego.AppConfig.String("rooturl") + "mp3dir/hlsCover/" + "room_"  + strconv.Itoa(room.Id) + "_cover.png"
 		list[k] = tplMap
 	}
 
