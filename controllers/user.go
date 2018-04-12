@@ -110,7 +110,10 @@ func (c *UserController) CheckLogin()  {
 	}
 	fmt.Println(session_key, "`s value is  ==>", sv)
 
+	resultMap := make(map[string]string)
 	if sv != "" {
+		resultMap["session_key"] = sv
+
 		wxSession := &WxSession{}
 		err := jsoniter.UnmarshalFromString(sv, &wxSession)
 		if err != nil {
@@ -126,8 +129,10 @@ func (c *UserController) CheckLogin()  {
 			fmt.Print("redis set Error: ")
 			fmt.Println(err)
 		}
+
+		resultMap["nickname"] = u.Username
 	}
 
-	c.Data["json"] = map[string]string{"session_key" : sv}
+	c.Data["json"] = resultMap
 	c.ServeJSON()
 }
