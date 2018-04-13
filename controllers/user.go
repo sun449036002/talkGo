@@ -84,6 +84,13 @@ func (c *UserController) Login()  {
 	u.UserJson = userinfoJson
 	err = u.NewUser()
 
+	userJson, _ := jsoniter.MarshalToString(u)
+	_, err = rc.Do("SET", "userinfo_" + sessionCacheKey, userJson)
+	if err != nil {
+		fmt.Print("redis set Error: ")
+		fmt.Println(err)
+	}
+
 	c.Data["json"] = map[string]string{"session_key" : sessionCacheKey}
 	c.ServeJSON()
 }
