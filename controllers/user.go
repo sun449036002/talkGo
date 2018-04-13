@@ -31,14 +31,15 @@ func (c *UserController) URLMapping() {
 // @router /login [get]
 func (c *UserController) Login()  {
 	code := c.GetString("code")
-	userinfoJson := c.GetString("userinfo")
-	fmt.Println("userinfo ===> ", userinfoJson)
-
-	userinfo := new(Userinfo)
-	err := json.Unmarshal([]byte(userinfoJson), userinfo)
-	if err != nil {
-		fmt.Println("userinfo json 失败")
-	}
+	rawData := c.GetString("rawData")
+	signature := c.GetString("signature")
+	encryptedData := c.GetString("encryptedData")
+	iv := c.GetString("iv")
+	fmt.Println("code=", code)
+	fmt.Println("rawData=", rawData)
+	fmt.Println("signature=", signature)
+	fmt.Println("encryptedData=", encryptedData)
+	fmt.Println("iv=", iv)
 
 	url := beego.AppConfig.String("wxApiUrl") + "sns/jscode2session?appid=" + beego.AppConfig.String("wxSmallAppId") + "&secret=" + beego.AppConfig.String("wxSmallSecret") + "&js_code=" + code + "&grant_type=authorization_code"
 	req := httplib.Get(url)
@@ -76,12 +77,17 @@ func (c *UserController) Login()  {
 	}
 	fmt.Println(sessionCacheKey)
 
+	//用户的信息
+	userinfo := new(Userinfo)
+
+
+
 	//保存用户
 	var u User
 	u.Openid = wxSession.Openid
 	u.Username = userinfo.NickName
 	u.AvatarUrl = userinfo.AvatarUrl
-	u.UserJson = userinfoJson
+	//u.UserJson = userinfoJson
 	err = u.NewUser()
 
 	userJson, _ := jsoniter.MarshalToString(u)
