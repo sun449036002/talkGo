@@ -9,9 +9,7 @@ package routers
 
 import (
 	"talkGo/controllers"
-
 	"github.com/astaxie/beego"
-	"talkGo/controllers/cartoon"
 )
 
 func init() {
