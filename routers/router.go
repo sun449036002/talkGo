@@ -26,11 +26,11 @@ func init() {
 				&controllers.TalkController{},
 			),
 		),
-		beego.NSNamespace("/cartoon",
-			beego.NSInclude(
-				&cartoon.IndexController{},
-			),
-		),
+		//beego.NSNamespace("/cartoon",
+		//	beego.NSInclude(
+		//		&cartoon.IndexController{},
+		//	),
+		//),
 		beego.NSNamespace("/room",
 			beego.NSInclude(
 				&controllers.RoomController{},
