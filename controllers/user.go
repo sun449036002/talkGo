@@ -99,7 +99,7 @@ func (c *UserController) Login()  {
 		fmt.Println(err)
 	}
 
-	c.Data["json"] = map[string]string{"session_key" : sessionCacheKey, "nickname" : userinfo.Nickname}
+	c.Data["json"] = map[string]string{"session_key" : sessionCacheKey, "nickname" : userinfo.NickName}
 	c.ServeJSON()
 }
 
