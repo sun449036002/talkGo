@@ -57,7 +57,7 @@ func (c *RoomController) Create() {
 // @Description up voice to server,chnage to text
 // @Success 200 {object} models.Talk
 // @Failure 403 :id is empty
-// @router /get-list [get]
+// @router /list [get]
 func (c *RoomController) GetList() {
 	jsonMap := make(map[string]interface{})
 
@@ -82,7 +82,7 @@ func (c *RoomController) GetList() {
 // @Description up voice to server,chnage to text
 // @Success 200 {object} models.Talk
 // @Failure 403 :id is empty
-// @router /i-exit [get]
+// @router /iexit [get]
 func (c *RoomController) IExit() {
 	c.init()
 	
