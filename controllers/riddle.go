@@ -8,6 +8,7 @@ import (
 	"github.com/astaxie/beego/httplib"
 	"talkGo/lib"
 	"github.com/garyburd/redigo/redis"
+	"strings"
 )
 
 var intervalTimes = 2
@@ -28,7 +29,7 @@ func (c *RiddleController) URLMapping() {
 // @router /get [get]
 func (c *RiddleController) Get() {
 	jsonMap := make(map[string]interface{})
-	roomId := c.GetString("roomId")
+	roomId := strings.Replace(c.GetString("roomId", ""), "room_", "", 1)
 	myType := c.GetString("type")
 
 	now := time.Now()
