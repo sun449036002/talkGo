@@ -8,6 +8,8 @@ import (
 	"github.com/astaxie/beego/httplib"
 )
 
+var intervalTimes = 2
+
 /**
 谜语
  */
@@ -29,7 +31,7 @@ func (c *RiddleController) Get() {
 
 	now := time.Now()
 	m := now.Minute()
-	liveTimers := 600 - (m % 10) * 60 - now.Second()
+	liveTimers :=  (intervalTimes - m % intervalTimes) * 60 - now.Second()
 
 	if liveTimers > 0 && myType == "timer" {
 		jsonMap["code"] = 0
