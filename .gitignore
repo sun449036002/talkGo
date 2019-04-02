@@ -1,3 +1,7 @@
 .DS_Store
+.idea/workspace.xml
 ./talkGo
-routers/commentsRouter_controllers.go
+./talkGo.exe
+./talkGo.exe~
+/static
+/routers/commentsRouter_controllers.go
