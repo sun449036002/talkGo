@@ -6,6 +6,8 @@ import (
 	"github.com/astaxie/beego"
 	"github.com/json-iterator/go"
 	"github.com/astaxie/beego/httplib"
+	"talkGo/lib"
+	"github.com/garyburd/redigo/redis"
 )
 
 var intervalTimes = 2
@@ -26,7 +28,7 @@ func (c *RiddleController) URLMapping() {
 // @router /get [get]
 func (c *RiddleController) Get() {
 	jsonMap := make(map[string]interface{})
-	//roomId := c.GetString("roomId")
+	roomId := c.GetString("roomId")
 	myType := c.GetString("type")
 
 	now := time.Now()
@@ -54,10 +56,27 @@ func (c *RiddleController) Get() {
 	}
 
 
-	firstRiddle := jsoniter.Get(bts, "showapi_res_body", "pagebean", "contentlist").Get(0).GetInterface()
+	firstRiddle := jsoniter.Get(bts, "showapi_res_body", "pagebean", "contentlist").Get(0)
+
+	//将答案放到Redis
+	rc, err := lib.Dial()
+	if err != nil {
+		fmt.Println(err)
+	}
+	defer rc.Close()
+
+	cacheKey := "riddle_answer_" + roomId
+	fmt.Println("cacheKey is ", cacheKey)
+	_, err = rc.Do("set", cacheKey, firstRiddle.Get("answer").ToString())
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println("answer ===>", firstRiddle.Get("answer").ToString())
+	a,_ := redis.String(rc.Do("get", cacheKey))
+	fmt.Println("缓存中的答案是:", a)
 
 	jsonMap["code"] = 0
-	jsonMap["riddle"] = firstRiddle
+	jsonMap["riddle"] = firstRiddle.GetInterface()
 
 	c.Data["json"] = jsonMap
 	c.ServeJSON()
