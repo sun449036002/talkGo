@@ -39,6 +39,11 @@ func init() {
 				&controllers.NotifyController{},
 			),
 		),
+		beego.NSNamespace("/riddle",
+			beego.NSInclude(
+				&controllers.RiddleController{},
+			),
+		),
 	)
 	beego.AddNamespace(ns)
 }
