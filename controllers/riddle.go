@@ -30,7 +30,7 @@ func (c *RiddleController) URLMapping() {
 func (c *RiddleController) Get() {
 	jsonMap := make(map[string]interface{})
 	roomId := strings.Replace(c.GetString("roomId", ""), "room_", "", 1)
-	myType := c.GetString("type")
+	//myType := c.GetString("type")
 
 	now := time.Now()
 	m := now.Minute()
