@@ -30,7 +30,7 @@ func (c *RiddleController) URLMapping() {
 func (c *RiddleController) Get() {
 	jsonMap := make(map[string]interface{})
 	roomId := strings.Replace(c.GetString("roomId", ""), "room_", "", 1)
-	//myType := c.GetString("type")
+	myType := c.GetString("type")
 
 	now := time.Now()
 	m := now.Minute()
@@ -46,7 +46,7 @@ func (c *RiddleController) Get() {
 	cacheKey := "riddle_answer_" + roomId
 
 	exists, _ := redis.Bool(rc.Do("EXISTS", cacheKey))
-	if liveTimers > 0 && !exists {
+	if liveTimers > 0 && myType == "timer" && !exists {
 		jsonMap["code"] = 0
 		jsonMap["liveTimers"] = liveTimers
 
