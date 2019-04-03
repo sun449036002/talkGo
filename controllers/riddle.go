@@ -36,7 +36,17 @@ func (c *RiddleController) Get() {
 	m := now.Minute()
 	liveTimers :=  (intervalTimes - m % intervalTimes) * 60 - now.Second()
 
-	if liveTimers > 0 && myType == "timer" {
+	//将答案放到Redis
+	rc, err := lib.Dial()
+	if err != nil {
+		fmt.Println(err)
+	}
+	defer rc.Close()
+
+	cacheKey := "riddle_answer_" + roomId
+
+	exists, _ := redis.Bool(rc.Do("EXISTS", cacheKey))
+	if liveTimers > 0 && myType == "timer" && !exists {
 		jsonMap["code"] = 0
 		jsonMap["liveTimers"] = liveTimers
 
@@ -56,24 +66,20 @@ func (c *RiddleController) Get() {
 		fmt.Println("err =====> ", err)
 	}
 
-
 	firstRiddle := jsoniter.Get(bts, "showapi_res_body", "pagebean", "contentlist").Get(0)
-
-	//将答案放到Redis
-	rc, err := lib.Dial()
-	if err != nil {
-		fmt.Println(err)
-	}
-	defer rc.Close()
-
-	cacheKey := "riddle_answer_" + roomId
 	fmt.Println("cacheKey is ", cacheKey)
-	_, err = rc.Do("set", cacheKey, firstRiddle.Get("answer").ToString())
+	answer := firstRiddle.Get("answer").ToString() //谜底：心太软
+	answerArr := strings.Split(answer, "：")
+	answer = answerArr[1]
+	fmt.Println(answerArr)
+	_, err = rc.Do("set", cacheKey, strings.TrimSpace(answer))
 	if err != nil {
 		fmt.Println(err)
 	}
 	fmt.Println("answer ===>", firstRiddle.Get("answer").ToString())
 	a,_ := redis.String(rc.Do("get", cacheKey))
+	//10分钟过1秒后，未答对，直接进入下一题
+	rc.Do("Expire", cacheKey, 60 * intervalTimes + 1)
 	fmt.Println("缓存中的答案是:", a)
 
 	jsonMap["code"] = 0
