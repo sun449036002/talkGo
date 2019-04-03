@@ -11,7 +11,8 @@ import (
 	"strings"
 )
 
-var intervalTimes = 2
+//分钟
+var intervalTimes = 10
 
 /**
 谜语
