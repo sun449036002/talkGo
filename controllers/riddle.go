@@ -46,7 +46,7 @@ func (c *RiddleController) Get() {
 	cacheKey := "riddle_answer_" + roomId
 
 	exists, _ := redis.Bool(rc.Do("EXISTS", cacheKey))
-	if liveTimers > 0 && myType == "timer" && !exists {
+	if liveTimers > 0 && !exists {
 		jsonMap["code"] = 0
 		jsonMap["liveTimers"] = liveTimers
 
