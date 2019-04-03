@@ -78,8 +78,6 @@ func (c *RiddleController) Get() {
 	}
 	fmt.Println("answer ===>", firstRiddle.Get("answer").ToString())
 	a,_ := redis.String(rc.Do("get", cacheKey))
-	//10分钟过1秒后，未答对，直接进入下一题
-	rc.Do("Expire", cacheKey, 60 * intervalTimes + 1)
 	fmt.Println("缓存中的答案是:", a)
 
 	jsonMap["code"] = 0
