@@ -3,6 +3,10 @@ package controllers
 import (
 	"talkGo/models"
 	"strconv"
+	"path"
+	"github.com/astaxie/beego"
+	"time"
+	"math"
 )
 
 type RoomController struct {
@@ -14,6 +18,7 @@ func (c *RoomController) URLMapping() {
 	c.Mapping("Create", c.Create)
 	c.Mapping("GetList", c.GetList)
 	c.Mapping("IExit", c.IExit)
+	c.Mapping("UploadImg", c.UploadImg)
 }
 
 // 创建房间...
@@ -98,6 +103,38 @@ func (c *RoomController) IExit() {
 	if !ok {
 		jsonMap["code"] = 0
 		jsonMap["msg"] = "exit room fail"
+	}
+
+	c.Data["json"] = jsonMap
+	c.ServeJSON()
+}
+
+// 图片上传...
+// @Title UploadImg
+// @Description up voice to server,chnage to text
+// @router /UploadImg [post]
+func (c *RoomController) UploadImg() {
+	jsonMap := make(map[string]interface{})
+
+	f, _, err := c.GetFile("cover")
+	if err != nil {
+		jsonMap["code"] = 0
+		jsonMap["msg"] = "图片上传失败"
+		c.Data["json"] = jsonMap
+		c.ServeJSON()
+		return
+	}
+	defer f.Close()
+
+	filename := time.Now().String() + ".png"
+	err = c.SaveToFile("file", path.Join("static/upload",filename))  //保存文件的路径。保存在static/upload中   （文件名）
+	if err != nil {
+		jsonMap["code"] = 0
+		jsonMap["msg"] = "图片保存失败"
+	} else {
+		jsonMap["code"] = 0
+		jsonMap["msg"] = "图片上传成功"
+		jsonMap["path"] = beego.AppConfig.String("rooturl") + "static/upload/" + filename
 	}
 
 	c.Data["json"] = jsonMap
