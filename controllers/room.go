@@ -135,6 +135,7 @@ func (c *RoomController) UploadImg() {
 	} else {
 		jsonMap["code"] = 0
 		jsonMap["msg"] = "图片上传成功"
+		jsonMap["coverImg"] = filename
 		jsonMap["path"] = beego.AppConfig.String("rooturl") + "static/upload/" + filename
 	}
 
