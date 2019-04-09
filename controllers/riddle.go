@@ -71,7 +71,9 @@ func (c *RiddleController) Get() {
 	fmt.Println("cacheKey is ", cacheKey)
 	answer := firstRiddle.Get("answer").ToString() //谜底：心太软
 	answerArr := strings.Split(answer, "：")
-	answer = answerArr[1]
+	if len(answerArr) > 1 {
+		answer = answerArr[1]
+	}
 	fmt.Println(answerArr)
 	_, err = rc.Do("set", cacheKey, strings.TrimSpace(answer))
 	if err != nil {
