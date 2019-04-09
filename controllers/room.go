@@ -126,7 +126,7 @@ func (c *RoomController) UploadImg() {
 	}
 	defer f.Close()
 
-	filename := time.Now().String() + ".png"
+	filename := strconv.Itoa(int(time.Now().UnixNano())) + ".png"
 	fmt.Println(path.Join("static/upload",filename))
 	err = c.SaveToFile("cover", path.Join("static/upload",filename))  //保存文件的路径。保存在static/upload中   （文件名）
 	if err != nil {
