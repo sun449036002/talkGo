@@ -111,7 +111,7 @@ func (c *RoomController) IExit() {
 // 图片上传...
 // @Title UploadImg
 // @Description up voice to server,chnage to text
-// @router /uploadimg [post]
+// @router /UploadImg [post]
 func (c *RoomController) UploadImg() {
 	jsonMap := make(map[string]interface{})
 
@@ -129,7 +129,7 @@ func (c *RoomController) UploadImg() {
 	err = c.SaveToFile("file", path.Join("static/upload",filename))  //保存文件的路径。保存在static/upload中   （文件名）
 	if err != nil {
 		jsonMap["code"] = 0
-		jsonMap["msg"] = "图片保存失败"
+		jsonMap["msg"] = "图片保存失败:" + err.Error()
 	} else {
 		jsonMap["code"] = 0
 		jsonMap["msg"] = "图片上传成功"
