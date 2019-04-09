@@ -6,7 +6,6 @@ import (
 	"path"
 	"github.com/astaxie/beego"
 	"time"
-	"math"
 )
 
 type RoomController struct {
