@@ -32,6 +32,7 @@ func (c *RoomController) Create() {
 	jsonMap := make(map[string]interface{})
 
 	name := c.GetString("name")
+	coverImg := c.GetString("coverImg")
 	if name == "" {
 		jsonMap["code"] = "100"
 		jsonMap["msg"] = "empty name"
@@ -40,8 +41,12 @@ func (c *RoomController) Create() {
 		return
 	}
 
+	dataMap := make(map[string]interface{})
+	dataMap["userId"] = c.user.Id
+	dataMap["name"] = name
+	dataMap["coverImg"] = coverImg
 	roomModel := new(models.Room)
-	roomId, err := roomModel.Create(c.user.Id, name)
+	roomId, err := roomModel.Create(dataMap)
 	if err != nil {
 		jsonMap["code"] = "100"
 		jsonMap["msg"] = "room create failed"

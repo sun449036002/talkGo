@@ -5,12 +5,14 @@ import (
 	"github.com/astaxie/beego/orm"
 	"strconv"
 	"github.com/astaxie/beego"
+	"path"
 )
 
 type Room struct {
 	Id       int `orm:"auto;pk"`
 	UserId  int
 	Name string
+	CoverImg string
 	Status int
 }
 
@@ -32,7 +34,8 @@ func (m *Room) GetList(page int64) ([]map[string]interface{}, int64, bool)  {
 		tplMap := make(map[string]interface{})
 		tplMap["roomId"] = "room_"  + strconv.Itoa(room.Id)
 		tplMap["roomName"] = room.Name
-		tplMap["roomCover"] = beego.AppConfig.String("rooturl") + "mp3dir/hlsCover/" + "room_"  + strconv.Itoa(room.Id) + "_cover.png"
+		//tplMap["roomCover"] = beego.AppConfig.String("rooturl") + "mp3dir/hlsCover/" + "room_"  + strconv.Itoa(room.Id) + "_cover.png"
+		tplMap["roomCover"] = beego.AppConfig.String("rooturl") + path.Join("static/upload", room.CoverImg)
 		list[k] = tplMap
 	}
 
@@ -41,10 +44,11 @@ func (m *Room) GetList(page int64) ([]map[string]interface{}, int64, bool)  {
 }
 
 //创建房间
-func (m *Room) Create(userId int, name string) (int64, error) {
+func (m *Room) Create(dataMap map[string]interface{}) (int64, error) {
 	o := orm.NewOrm()
-	m.Name = name
-	m.UserId = userId
+	m.Name = dataMap["name"].(string)
+	m.CoverImg = dataMap["coverImg"].(string)
+	m.UserId = dataMap["userId"].(int)
 	m.Status = 1
 
 	id, err := o.Insert(m)
