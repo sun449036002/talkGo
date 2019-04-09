@@ -71,8 +71,13 @@ func (c *RiddleController) Get() {
 	fmt.Println("cacheKey is ", cacheKey)
 	answer := firstRiddle.Get("answer").ToString() //谜底：心太软
 	answerArr := strings.Split(answer, "：")
-	if len(answerArr) > 1 {
-		answer = answerArr[1]
+	if len(answerArr) < 1 {
+		jsonMap["code"] = 0
+		jsonMap["riddle"] = jsoniter.Get(bts, "showapi_res_error").ToString()
+
+		c.Data["json"] = jsonMap
+		c.ServeJSON()
+		return
 	}
 	fmt.Println(answerArr)
 	_, err = rc.Do("set", cacheKey, strings.TrimSpace(answer))
