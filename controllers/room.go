@@ -6,6 +6,7 @@ import (
 	"path"
 	"github.com/astaxie/beego"
 	"time"
+	"fmt"
 )
 
 type RoomController struct {
@@ -126,7 +127,8 @@ func (c *RoomController) UploadImg() {
 	defer f.Close()
 
 	filename := time.Now().String() + ".png"
-	err = c.SaveToFile("file", path.Join("static/upload",filename))  //保存文件的路径。保存在static/upload中   （文件名）
+	fmt.Println(path.Join("static/upload",filename))
+	err = c.SaveToFile("cover", path.Join("static/upload",filename))  //保存文件的路径。保存在static/upload中   （文件名）
 	if err != nil {
 		jsonMap["code"] = 0
 		jsonMap["msg"] = "图片保存失败:" + err.Error()
