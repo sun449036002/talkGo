@@ -111,7 +111,7 @@ func (c *RoomController) IExit() {
 // 图片上传...
 // @Title UploadImg
 // @Description up voice to server,chnage to text
-// @router /UploadImg [post]
+// @router /uploadimg [post]
 func (c *RoomController) UploadImg() {
 	jsonMap := make(map[string]interface{})
 

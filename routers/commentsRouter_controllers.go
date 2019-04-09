@@ -63,6 +63,15 @@ func init() {
 
     beego.GlobalControllerRouter["talkGo/controllers:RoomController"] = append(beego.GlobalControllerRouter["talkGo/controllers:RoomController"],
         beego.ControllerComments{
+            Method: "UploadImg",
+            Router: `/UploadImg`,
+            AllowHTTPMethods: []string{"post"},
+            MethodParams: param.Make(),
+            Filters: nil,
+            Params: nil})
+
+    beego.GlobalControllerRouter["talkGo/controllers:RoomController"] = append(beego.GlobalControllerRouter["talkGo/controllers:RoomController"],
+        beego.ControllerComments{
             Method: "IExit",
             Router: `/iexit`,
             AllowHTTPMethods: []string{"get"},
